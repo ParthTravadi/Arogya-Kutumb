@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arogya Kutumb — आरोग्य कुटुम्ब</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --earth:#2B1F0A;--bark:#3D2B0F;--saffron:#C8760A;--gold:#E5A020;--ghee:#F5DFA0;
+  --cream:#FAF6EE;--leaf:#2D5A1B;--sprout:#5A9E30;--mist:#E8F3DF;
+  --river:#1B4A6B;--sky:#E6F2FB;--pitta-r:#A32D2D;--pitta-bg:#FCEBEB;--pitta-b:#F7C1C1;
+  --monsoon-r:#0C447C;--monsoon-bg:#E6F1FB;--monsoon-b:#B5D4F4;
+  --autumn-r:#173404;--autumn-bg:#EAF3DE;--autumn-b:#C0DD97;
+  --winter-r:#26215C;--winter-bg:#EEEDFE;--winter-b:#CECBF6;
+  --text:#1A1208;--muted:#7A6548;--border:#D4C4A0;--surface:#FFFDF7;--card:#FFFFFF;
+  --radius:14px;--shadow:0 2px 20px rgba(43,31,10,0.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* MASTHEAD */
+.masthead{background:linear-gradient(135deg,#1A1005 0%,#3D2B0F 55%,#6B4210 100%);padding:1.75rem 1.5rem 1.4rem;text-align:center;position:relative;overflow:hidden}
+.masthead::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(200,118,10,.07) 0%,transparent 60%),radial-gradient(circle at 80% 20%,rgba(229,160,32,.05) 0%,transparent 50%);pointer-events:none}
+.masthead-inner{position:relative;max-width:680px;margin:0 auto}
+.mast-om{font-size:2rem;color:var(--gold);opacity:.65;line-height:1;margin-bottom:.2rem;font-family:'Noto Sans Devanagari',serif}
+.mast-h{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4.5vw,2.6rem);font-weight:700;color:var(--ghee);letter-spacing:.01em;line-height:1.15;margin-bottom:.25rem}
+.mast-dev{font-family:'Noto Sans Devanagari',serif;font-size:1rem;color:var(--gold);margin-bottom:.5rem;opacity:.85}
+.mast-sub{font-size:.72rem;color:rgba(245,223,160,.55);letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+
+/* LIVE CONTEXTUAL BAR */
+.ctx-bar{background:var(--bark);display:flex;flex-wrap:wrap;align-items:stretch;border-bottom:1px solid rgba(200,118,10,.2)}
+.ctx-cell{padding:.6rem 1rem;display:flex;flex-direction:column;gap:2px;border-right:1px solid rgba(200,118,10,.15);flex:1;min-width:110px}
+.ctx-cell:last-child{border-right:none}
+.ctx-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,223,160,.45);font-weight:500}
+.ctx-val{font-size:.82rem;color:var(--ghee);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sprout);animation:pulse 2s infinite;margin-right:4px;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.aqi-g{color:#7ECB50}.aqi-m{color:#F5C842}.aqi-b{color:#E05A5A}
+
+/* QUOTE */
+.quote-bar{background:var(--mist);border-bottom:1px solid var(--autumn-b);padding:.95rem 1.5rem;text-align:center}
+.q-skt{font-family:'Noto Sans Devanagari',serif;font-size:1.02rem;color:var(--leaf);font-weight:500;margin-bottom:.25rem}
+.q-mean{font-family:'Playfair Display',serif;font-size:.85rem;color:var(--muted);font-style:italic}
+
+/* NAV */
+.nav-wrap{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav{max-width:1080px;margin:0 auto;display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 .5rem}
+.nav::-webkit-scrollbar{display:none}
+.nb{padding:.75rem 1.05rem;font-size:.75rem;font-weight:500;font-family:'Inter',sans-serif;color:var(--muted);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .15s;letter-spacing:.02em}
+.nb:hover{color:var(--saffron)}
+.nb.act{color:var(--saffron);border-bottom-color:var(--saffron)}
+
+/* SECTIONS */
+.sec{display:none;padding:1.25rem 1.25rem 3rem;max-width:1080px;margin:0 auto}
+.sec.act{display:block}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow)}
+.card+.card{margin-top:1rem}
+.ct{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--earth);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+
+/* SETUP HERO */
+.setup-hero{background:linear-gradient(135deg,var(--leaf),#12320A);border-radius:16px;padding:1.6rem;margin-bottom:1.2rem;text-align:center;color:#fff}
+.setup-hero h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ghee);margin-bottom:.35rem}
+.setup-hero p{font-size:.82rem;color:rgba(245,223,160,.75);max-width:500px;margin:0 auto}
+
+/* FORMS */
+label{display:block;font-size:.72rem;font-weight:500;color:var(--muted);margin-bottom:.28rem;letter-spacing:.05em;text-transform:uppercase}
+input,select{width:100%;padding:.58rem .85rem;font-size:.88rem;font-family:'Inter',sans-serif;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--saffron)}
+.fg{margin-bottom:.85rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.btn{padding:.6rem 1.4rem;border:none;border-radius:9px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-g{background:var(--leaf);color:#fff}.btn-g:hover{background:#1A3A0A}
+.btn-s{background:var(--saffron);color:#fff}.btn-s:hover{background:#A5600A}
+.btn-o{background:transparent;color:var(--muted);border:1.5px solid var(--border)}.btn-o:hover{border-color:var(--muted)}
+.btn-r{background:#FCEBEB;color:var(--pitta-r);border:1px solid var(--pitta-b)}.btn-r:hover{background:#F7C1C1}
+
+/* MEMBER CARDS */
+.members-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.85rem;margin-bottom:1rem}
+.mcard{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem;position:relative;transition:box-shadow .15s}
+.mcard.filled{border-color:var(--sprout)}
+.mcard:hover{box-shadow:var(--shadow)}
+.mcard-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.7rem}
+.mcard-name{font-weight:500;font-size:.95rem;color:var(--earth)}
+.mcard-detail{font-size:.75rem;color:var(--muted);margin-top:2px;line-height:1.5}
+.dtag{display:inline-block;font-size:.68rem;padding:2px 8px;border-radius:20px;margin-top:5px;font-weight:500}
+.mcard-rmv{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;opacity:.45}
+.mcard-rmv:hover{opacity:1;color:var(--pitta-r)}
+.add-card{background:var(--cream);border:2px dashed var(--border);border-radius:var(--radius);padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;min-height:170px;transition:all .15s;text-align:center}
+.add-card:hover{border-color:var(--sprout);background:var(--mist)}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(43,31,10,.6);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(2px)}
+.overlay.open{display:flex}
+.obox{background:var(--card);border-radius:16px;padding:1.75rem;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;box-shadow:0 12px 48px rgba(43,31,10,.28)}
+.otitle{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--earth);margin-bottom:1.2rem;text-align:center}
+.btn-row{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1rem}
+
+/* LOCATION BAR */
+.loc-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1.2rem;display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 2rem;margin-bottom:1rem}
+.litem{display:flex;flex-direction:column;gap:2px}
+.l-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:500}
+.l-val{font-size:.88rem;font-weight:500;color:var(--earth)}
+.aqi-pill{padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600;display:inline-block}
+
+/* SEASON BANNER */
+.s-banner{border-radius:var(--radius);padding:1.3rem 1.4rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.s-eye{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:.35rem;opacity:.75}
+.s-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:.25rem}
+.s-period{font-size:.78rem;margin-bottom:.65rem;opacity:.8}
+.s-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:500;margin-right:5px;margin-bottom:4px;border:1px solid rgba(0,0,0,.12)}
+.s-principle{font-size:.83rem;line-height:1.6;opacity:.9;margin-top:.65rem}
+
+/* ROTI FORMULA */
+.formula-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.flour-table{width:100%;border-collapse:collapse}
+.flour-table tr{border-bottom:1px solid var(--border)}
+.flour-table tr:last-child{border-bottom:none;font-weight:600}
+.flour-table td{padding:.45rem .3rem;font-size:.83rem}
+.flour-table td:last-child{text-align:right;font-weight:500;color:var(--saffron);font-family:'Playfair Display',serif}
+.herb-pill{display:inline-block;background:var(--mist);border:1px solid var(--autumn-b);color:var(--leaf);font-size:.68rem;padding:2px 8px;border-radius:20px;margin:2px}
+.nutr-boxes{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:.85rem}
+.nbox{background:var(--surface);border-radius:9px;padding:.6rem;text-align:center;border:1px solid var(--border)}
+.nval{font-size:1.05rem;font-weight:600;color:var(--leaf);font-family:'Playfair Display',serif}
+.nlbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+/* PER PERSON TABLE */
+.pp-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.pp-table th{text-align:left;padding:6px 8px;color:var(--muted);font-weight:500;background:var(--cream);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.pp-table td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+.pp-table tr:last-child td{border-bottom:none}
+.progress{height:5px;background:var(--border);border-radius:3px;margin-top:3px}
+.pbar{height:5px;border-radius:3px;background:var(--sprout)}
+
+/* DOS DONTS */
+.dos-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.dos-box{background:var(--mist);border:1px solid var(--autumn-b);border-radius:var(--radius);padding:1.1rem}
+.dos-ttl{font-size:.82rem;font-weight:600;color:var(--leaf);margin-bottom:.65rem}
+.dos-item{display:flex;gap:7px;font-size:.78rem;color:#27500A;line-height:1.45;padding:3px 0}
+.dos-bullet{flex-shrink:0;color:var(--sprout);font-weight:700}
+.dont-box{background:var(--pitta-bg);border:1px solid var(--pitta-b);border-radius:var(--radius);padding:1.1rem}
+.dont-ttl{font-size:.82rem;font-weight:600;color:var(--pitta-r);margin-bottom:.65rem}
+.dont-item{display:flex;gap:7px;font-size:.78rem;color:#A32D2D;line-height:1.45;padding:3px 0}
+.dont-bullet{flex-shrink:0;color:#D85A30;font-weight:700}
+
+/* TABS */
+.s-tabs{display:flex;gap:7px;margin-bottom:1.1rem;flex-wrap:wrap}
+.stab{padding:7px 16px;border-radius:24px;font-size:.78rem;font-weight:500;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .12s}
+.stab.a-summer{background:var(--pitta-bg);border-color:var(--pitta-b);color:var(--pitta-r)}
+.stab.a-monsoon{background:var(--monsoon-bg);border-color:var(--monsoon-b);color:var(--monsoon-r)}
+.stab.a-autumn{background:var(--autumn-bg);border-color:var(--autumn-b);color:var(--autumn-r)}
+.stab.a-winter{background:var(--winter-bg);border-color:var(--winter-b);color:var(--winter-r)}
+
+/* HABIT TRACKER */
+.habit-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:.55rem;display:flex;align-items:center;gap:.9rem;transition:box-shadow .12s}
+.habit-item:hover{box-shadow:var(--shadow)}
+.h-icon{font-size:1.15rem;flex-shrink:0}
+.h-text{flex:1}
+.h-name{font-size:.85rem;font-weight:500;color:var(--earth)}
+.h-why{font-size:.7rem;color:var(--muted);margin-top:1px}
+.h-chk{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;background:white;font-size:.8rem}
+.h-chk.done{background:var(--leaf);border-color:var(--leaf);color:white}
+.streak-days{display:flex;flex-wrap:wrap;gap:4px;margin-top:.6rem}
+.sd{width:27px;height:27px;border-radius:6px;border:1.5px solid var(--border);background:white;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:500;color:var(--muted);cursor:default}
+.sd.done{background:var(--leaf);border-color:var(--leaf);color:white}
+.sd.part{background:var(--ghee);border-color:var(--saffron);color:var(--earth)}
+.sd.today{box-shadow:0 0 0 2px var(--saffron)}
+.tab-mtabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.mtab{padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:500;border:1.5px solid var(--border);background:white;color:var(--muted);cursor:pointer;transition:all .12s}
+.mtab.act{background:var(--leaf);border-color:var(--leaf);color:white}
+
+/* MANTRA */
+.mantra-hero{background:linear-gradient(135deg,var(--earth),#5C3A0A);border-radius:16px;padding:2rem;text-align:center;color:white;margin-bottom:1rem}
+.m-day{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
+.m-deity{display:inline-block;background:rgba(200,118,10,.22);border:1px solid rgba(200,118,10,.4);color:var(--gold);font-size:.7rem;padding:2px 10px;border-radius:20px;margin-bottom:.9rem}
+.m-text{font-family:'Noto Sans Devanagari',serif;font-size:1.5rem;color:var(--ghee);line-height:1.55;margin-bottom:.75rem}
+.m-meaning{font-family:'Playfair Display',serif;font-size:.88rem;color:rgba(245,223,160,.75);font-style:italic;line-height:1.6}
+
+/* RASHI */
+.rashi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem}
+.ritem{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.85rem;text-align:center;cursor:pointer;transition:all .15s}
+.ritem:hover,.ritem.sel{border-color:var(--saffron);background:var(--cream)}
+.rsym{font-size:1.5rem;margin-bottom:.3rem}
+.rname{font-size:.78rem;font-weight:500;color:var(--earth)}
+.rdev{font-family:'Noto Sans Devanagari',serif;font-size:.72rem;color:var(--muted)}
+.rashi-out{background:linear-gradient(135deg,var(--cream),white);border:1.5px solid var(--gold);border-radius:var(--radius);padding:1.25rem;margin-top:1rem}
+.r-hdr{display:flex;align-items:center;gap:.85rem;margin-bottom:.75rem}
+.r-sym{font-size:2.2rem}
+.r-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--earth)}
+.r-date{font-size:.72rem;color:var(--muted)}
+.r-body{font-size:.83rem;color:var(--text);line-height:1.65}
+
+/* AI */
+.ai-box{background:linear-gradient(135deg,#F0EDFE,#FFFDF7);border:1px solid #CECBF6;border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem}
+.ai-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem}
+.ai-badge{background:#3C3489;color:white;font-size:.6rem;padding:2px 8px;border-radius:20px;font-weight:500;letter-spacing:.05em}
+.ai-title{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:600;color:#26215C}
+.ai-body{font-size:.82rem;color:#3C3489;line-height:1.65}
+.spinner{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--saffron);border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* DASHBOARD STAT */
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-bottom:1rem}
+.dstat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center;box-shadow:var(--shadow)}
+.dstat-val{font-size:1.8rem;font-weight:700;font-family:'Playfair Display',serif;color:var(--saffron)}
+.dstat-lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+/* MONTHLY NAV */
+.mnav{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.mnav-btn{background:none;border:1px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:.8rem;color:var(--muted)}
+.mnav-btn:hover{border-color:var(--saffron);color:var(--saffron)}
+.mnav-lbl{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--earth)}
+
+/* FOOTER */
+.footer{background:var(--earth);padding:1.4rem 1.5rem;text-align:center}
+.f-logo{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:.4rem}
+.f-text{font-size:.72rem;color:rgba(245,223,160,.45);line-height:1.8}
+
+/* SHARE */
+.share-hero{background:linear-gradient(135deg,var(--earth),#5C3A0A);border-radius:16px;padding:2rem;text-align:center;color:white;margin-bottom:1.4rem}
+.deploy-step{background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:.85rem 1rem;font-family:monospace;font-size:.78rem;color:var(--earth);line-height:2;margin-bottom:.75rem}
+
+/* RESPONSIVE */
+@media(max-width:620px){
+  .g2,.g3,.g4,.formula-wrap,.frow,.dos-grid{grid-template-columns:1fr}
+  .nutr-boxes,.dash-stats{grid-template-columns:1fr 1fr}
+  .ctx-cell{min-width:90px;padding:.5rem .7rem}
+  .ctx-val{font-size:.72rem}
+  .rashi-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="mast-om">ॐ</div>
+    <h1 class="mast-h">Arogya Kutumb</h1>
+    <div class="mast-dev">आरोग्य कुटुम्ब</div>
+    <div class="mast-sub">Holistic Family Health · Nutrition · Ayurveda · Ahmedabad</div>
+  </div>
+</div>
+
+<!-- CONTEXTUAL BAR -->
+<div class="ctx-bar" id="ctxBar">
+  <div class="ctx-cell"><div class="ctx-label"><span class="live-dot"></span>Live</div><div class="ctx-val" id="ctxTime">—</div></div>
+  <div class="ctx-cell"><div class="ctx-label">📍 Location</div><div class="ctx-val" id="ctxCity">Ahmedabad, Gujarat</div></div>
+  <div class="ctx-cell"><div class="ctx-label">🌿 Ritu</div><div class="ctx-val" id="ctxRitu">—</div></div>
+  <div class="ctx-cell"><div class="ctx-label">⭐ Nakshatra</div><div class="ctx-val" id="ctxNak">—</div></div>
+  <div class="ctx-cell"><div class="ctx-label">💨 AQI</div><div class="ctx-val" id="ctxAqi">—</div></div>
+  <div class="ctx-cell"><div class="ctx-label">👪 Family</div><div class="ctx-val" id="ctxFam">0 members</div></div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-bar">
+  <div class="q-skt" id="qSkt">आयुर्वेद शरणं गच्छामि</div>
+  <div class="q-mean" id="qMean">"I take refuge in Ayurveda — the science of life."</div>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="nb act" onclick="showTab('dash')">🏠 Dashboard</button>
+    <button class="nb" onclick="showTab('family')">👪 Family Setup</button>
+    <button class="nb" onclick="showTab('roti')">🫓 Roti Calculator</button>
+    <button class="nb" onclick="showTab('seasons')">🍃 Seasonal Guide</button>
+    <button class="nb" onclick="showTab('tracker')">✅ Daily Tracker</button>
+    <button class="nb" onclick="showTab('mantra')">🕉 Mantra</button>
+    <button class="nb" onclick="showTab('rashifal')">⭐ Rashifal</button>
+    <button class="nb" onclick="showTab('share')">🚀 Share</button>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="sec act" id="sec-dash">
+  <div class="dash-stats" id="dashStats">
+    <div class="dstat"><div class="dstat-val" id="ds-fam">0</div><div class="dstat-lbl">Family Members</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-ritu">—</div><div class="dstat-lbl">Current Ritu</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-aqi">—</div><div class="dstat-lbl">AQI Today</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-streak">0🔥</div><div class="dstat-lbl">Habit Streak</div></div>
+  </div>
+
+  <div class="card" id="rituDashCard" style="margin-bottom:1rem">
+    <div class="ct">🌿 Today — <span id="rituDashName">Loading…</span></div>
+    <div id="rituDashBody">Loading ritu information…</div>
+  </div>
+
+  <div id="dashFamCards" class="card" style="margin-bottom:1rem">
+    <div class="ct">👪 Your family at a glance</div>
+    <div id="dashFamGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem">
+      <div style="text-align:center;padding:1.25rem;border:2px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;cursor:pointer" onclick="showTab('family')">➕ Add family members in Family Setup</div>
+    </div>
+  </div>
+
+  <div class="ai-box">
+    <div class="ai-hdr"><span class="ai-badge">AI</span><span class="ai-title">Today's personalised holistic recommendation</span></div>
+    <div class="ai-body" id="dashAi"><span class="spinner"></span> Loading…</div>
+  </div>
+</div>
+
+<!-- ══════════ FAMILY SETUP ══════════ -->
+<div class="sec" id="sec-family">
+  <div class="setup-hero">
+    <h2>🌿 Family Health Profiles</h2>
+    <p>Add every member — name, age, weight, gender, Rashi and Prakriti. The system uses these to personalise roti portions, nutrient targets, dosha recommendations, and Rashifal readings.</p>
+  </div>
+
+  <!-- Location Card -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ct">📍 Location & Environment</div>
+    <div class="g3">
+      <div class="fg"><label>City</label><input id="inCity" value="Ahmedabad" oninput="saveLoc()"></div>
+      <div class="fg"><label>State</label><input id="inState" value="Gujarat" oninput="saveLoc()"></div>
+      <div class="fg"><label>Current AQI <span style="font-size:.65rem;font-weight:400;text-transform:none">(0–500)</span></label><input id="inAqi" type="number" placeholder="e.g. 85" oninput="saveLoc()"></div>
+    </div>
+    <div id="aqiGuide" style="font-size:.75rem;color:var(--muted);margin-top:.3rem">
+      AQI guide: <span class="aqi-g">0–50 Good</span> · <span class="aqi-m">51–100 Moderate</span> · <span style="color:#E05A5A">101–150 Unhealthy for sensitive</span> · <span style="color:var(--pitta-r)">151+ Unhealthy</span>
+    </div>
+  </div>
+
+  <!-- Number of persons quick-set -->
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ct">🔢 Quick family size</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.85rem">How many members in your family? We'll create blank profiles to fill in.</div>
+    <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <div class="fg" style="margin:0;display:flex;align-items:center;gap:.75rem">
+        <label style="margin:0;white-space:nowrap">Number of members:</label>
+        <input id="inFamCount" type="number" min="1" max="20" value="2" style="width:80px">
+      </div>
+      <button class="btn btn-g" onclick="bulkAddSlots()">Create profiles →</button>
+    </div>
+  </div>
+
+  <!-- Family cards -->
+  <div class="members-wrap" id="membersWrap"></div>
+  <button class="btn btn-g" onclick="openAdd()">➕ Add individual member</button>
+</div>
+
+<!-- ADD OVERLAY -->
+<div class="overlay" id="addOv">
+  <div class="obox">
+    <div class="otitle">🌿 Add family member</div>
+    <div class="fg"><label>Name</label><input id="mN" placeholder="e.g. Priya"></div>
+    <div class="frow">
+      <div class="fg"><label>Age (years)</label><input id="mA" type="number" placeholder="35" min="1" max="100"></div>
+      <div class="fg"><label>Weight (kg)</label><input id="mW" type="number" placeholder="60" min="3" max="200"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Gender</label>
+        <select id="mG"><option value="female">Female</option><option value="male">Male</option><option value="child">Child (under 14)</option></select>
+      </div>
+      <div class="fg"><label>Rashi</label>
+        <select id="mR">
+          <option value="">Select Rashi</option>
+          <option>Mesh ♈</option><option>Vrishabh ♉</option><option>Mithun ♊</option><option>Karka ♋</option>
+          <option>Simha ♌</option><option>Kanya ♍</option><option>Tula ♎</option><option>Vrischik ♏</option>
+          <option>Dhanu ♐</option><option>Makar ♑</option><option>Kumbh ♒</option><option>Meen ♓</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Prakriti (body type)</label>
+      <select id="mP">
+        <option>Vata — thin, creative, quick</option><option>Pitta — medium, intense, driven</option>
+        <option>Kapha — strong, calm, grounded</option><option>Vata-Pitta — dual</option>
+        <option>Pitta-Kapha — dual</option><option>Vata-Kapha — dual</option><option>Tridosha — balanced</option>
+      </select>
+    </div>
+    <div class="fg"><label>Health focus</label>
+      <select id="mF">
+        <option>General wellness</option><option>Stamina & fitness</option><option>Hormonal balance</option>
+        <option>Immunity building</option><option>Gut & digestion</option><option>Weight management</option><option>Child growth</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-o" onclick="closeAdd()">Cancel</button>
+      <button class="btn btn-g" onclick="saveMember()">Add to family 🌿</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ROTI CALCULATOR ══════════ -->
+<div class="sec" id="sec-roti">
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ct">🫓 Family Multivitamin Roti Calculator</div>
+    <div class="g2" style="margin-bottom:.85rem">
+      <div class="fg" style="margin:0"><label>Number of rotis to prepare</label>
+        <input id="rCount" type="number" value="12" min="4" max="60" step="4" oninput="calcRoti()"></div>
+      <div class="fg" style="margin:0"><label>Season</label>
+        <select id="rSeason" onchange="calcRoti()">
+          <option value="summer">☀️ Grishma (Summer) Mar–Jun</option>
+          <option value="monsoon">🌧️ Varsha (Monsoon) Jul–Sep</option>
+          <option value="autumn" selected>🍂 Sharad (Autumn) Oct–Nov</option>
+          <option value="winter">❄️ Hemant (Winter) Dec–Feb</option>
+        </select>
+      </div>
+    </div>
+    <div id="rotiOut"></div>
+  </div>
+  <div class="card">
+    <div class="ct">📊 Per-person nutrition at lunch (based on each person's 3-roti serving)</div>
+    <div id="ppTable"><p style="font-size:.82rem;color:var(--muted)">Add family members to see personalised breakdown.</p></div>
+  </div>
+</div>
+
+<!-- ══════════ SEASONAL GUIDE ══════════ -->
+<div class="sec" id="sec-seasons">
+  <div class="s-tabs">
+    <button class="stab" onclick="showSeason('summer',this)">☀️ Grishma — Summer</button>
+    <button class="stab" onclick="showSeason('monsoon',this)">🌧️ Varsha — Monsoon</button>
+    <button class="stab" onclick="showSeason('autumn',this)">🍂 Sharad — Autumn</button>
+    <button class="stab" onclick="showSeason('winter',this)">❄️ Hemant — Winter</button>
+  </div>
+  <div id="seasonOut"></div>
+</div>
+
+<!-- ══════════ TRACKER ══════════ -->
+<div class="sec" id="sec-tracker">
+  <div class="mnav">
+    <button class="mnav-btn" onclick="changeMonth(-1)">‹</button>
+    <div class="mnav-lbl" id="mnavLbl">October 2026</div>
+    <button class="mnav-btn" onclick="changeMonth(1)">›</button>
+    <div style="margin-left:auto;font-size:.78rem;color:var(--muted)">Best streak: <strong id="bestStreak">0</strong> days 🔥</div>
+  </div>
+  <div class="tab-mtabs" id="hMemberTabs">
+    <div class="mtab act" onclick="selHM('all',this)">Everyone</div>
+  </div>
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ct">📅 Month view</div>
+    <div class="streak-days" id="streakDays"></div>
+    <div style="display:flex;gap:1rem;margin-top:.75rem;font-size:.7rem;color:var(--muted)">
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:13px;height:13px;border-radius:3px;background:var(--leaf)"></div> Complete</div>
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:13px;height:13px;border-radius:3px;background:var(--ghee);border:1px solid var(--saffron)"></div> Partial</div>
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:13px;height:13px;border-radius:3px;border:1.5px solid var(--border)"></div> Missed</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct" style="justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+      <span>✅ Today's habits — <span id="hDateLbl" style="color:var(--saffron)"></span></span>
+      <span style="font-size:.82rem;color:var(--muted)">Score: <strong id="todayScore" style="color:var(--leaf)">0/0</strong></span>
+    </div>
+    <div id="habitList"></div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+      <button class="btn btn-s" onclick="saveHabits()" style="font-size:.8rem">Save today ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ MANTRA ══════════ -->
+<div class="sec" id="sec-mantra">
+  <div class="mantra-hero">
+    <div class="m-day" id="mDay">Loading…</div>
+    <div class="m-deity" id="mDeity">॰</div>
+    <div class="m-text" id="mText">…</div>
+    <div class="m-meaning" id="mMeaning">Loading today's mantra…</div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ct">📿 How to chant</div>
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.75">
+        1. Sit facing <strong>East or North</strong> — morning is ideal.<br>
+        2. Light a ghee diya or incense if available.<br>
+        3. Take 3 deep breaths before starting.<br>
+        4. Chant <strong>108 times</strong> (1 mala) or minimum 11 times.<br>
+        5. Sit in silence for 2 minutes after completing.
+      </div>
+    </div>
+    <div class="card"><div class="ct">🕰 Best times</div>
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.75">
+        <strong>Brahma Muhurta</strong> — 4:00–6:00 AM (most powerful)<br>
+        <strong>Sunrise</strong> — 6:00–7:00 AM (ideal before roti prep)<br>
+        <strong>Sandhya</strong> — sunset 6:00–7:00 PM<br>
+        <strong>Before sleep</strong> — calms Vata, builds Ojas overnight
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem">
+    <div class="ct">🗓 Full week — mantra schedule</div>
+    <div id="weekMantras"></div>
+  </div>
+</div>
+
+<!-- ══════════ RASHIFAL ══════════ -->
+<div class="sec" id="sec-rashifal">
+  <div class="card" style="margin-bottom:1rem">
+    <div class="ct">⭐ Select your Rashi for today's reading</div>
+    <div class="rashi-grid" id="rashiGrid"></div>
+  </div>
+  <div id="rashiOut" style="display:none" class="rashi-out"></div>
+  <div class="card" style="margin-top:1rem">
+    <div class="ct">👪 Family Rashi board</div>
+    <div id="famRashiBoard"><p style="font-size:.82rem;color:var(--muted)">Add family members with Rashi selected to see their daily board here.</p></div>
+  </div>
+</div>
+
+<!-- ══════════ SHARE ══════════ -->
+<div class="sec" id="sec-share">
+  <div class="share-hero">
+    <div style="font-size:2.2rem;margin-bottom:.5rem">🚀</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--ghee);margin-bottom:.4rem">Share Arogya Kutumb</div>
+    <div style="font-size:.85rem;color:rgba(245,223,160,.65)">One HTML file · No server · No database · Share with 10 or 10,000 people</div>
+  </div>
+  <div class="g2" style="margin-bottom:1rem">
+    <div class="card">
+      <div class="ct">📄 GitHub Pages (Free · Recommended)</div>
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.85;margin-bottom:1rem">
+        ✅ Free forever &nbsp;·&nbsp; ✅ Custom domain<br>
+        ✅ Auto-updates &nbsp;·&nbsp; ✅ Works for any group size<br>
+        ✅ Single HTML file to deploy
+      </div>
+      <div class="deploy-step">
+        1. github.com → New repository<br>
+        2. Name: <strong>arogya-kutumb</strong><br>
+        3. Upload this HTML file as index.html<br>
+        4. Settings → Pages → Deploy from main<br>
+        5. Share: <em>username.github.io/arogya-kutumb</em>
+      </div>
+      <button class="btn btn-g" onclick="dlHTML()">⬇ Download this file</button>
+    </div>
+    <div class="card">
+      <div class="ct">📋 Notion Embed</div>
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.85;margin-bottom:1rem">
+        ✅ Embed inside any Notion page<br>
+        ✅ Share via Notion public link<br>
+        ✅ Perfect for family / community wikis<br>
+        ⚠️ Requires GitHub Pages URL first
+      </div>
+      <div class="deploy-step">
+        In Notion: Type /embed<br>
+        Paste your GitHub Pages URL<br>
+        Width: <strong>Full width</strong><br>
+        Height: <strong>800 px</strong>
+      </div>
+      <button class="btn btn-s" onclick="copyEmbed()">📋 Copy embed snippet</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🔑 API Key (for Rashifal + AI insights)</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">AI features use Claude API. Your key is stored only in your browser's localStorage — never sent to any server other than Anthropic.</p>
+    <div class="g2">
+      <div class="fg" style="margin:0"><label>Anthropic API Key</label>
+        <input type="password" id="apiIn" placeholder="sk-ant-…"></div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn btn-g" onclick="saveKey()" style="width:100%">Save locally 🔒</button>
+      </div>
+    </div>
+    <div id="apiSt" style="font-size:.78rem;margin-top:.5rem;color:var(--sprout)"></div>
+    <p style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Get a free key at console.anthropic.com · Key stored in localStorage only</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="f-logo">🌿 Arogya Kutumb — आरोग्य कुटुम्ब</div>
+  <div class="f-text">
+    आहारः प्राणिनां प्राणः — Food is the life-force of all living beings.<br>
+    Ayurvedic wisdom · Modern nutrition science · Zero server · Zero tracking · Your data stays on your device.
+  </div>
+</div>
+
+<script>
+/* ═══════════ STATE ═══════════ */
+let FAM = JSON.parse(localStorage.getItem('ak2_fam')||'[]');
+let HAB = JSON.parse(localStorage.getItem('ak2_hab')||'{}');
+let LOC = JSON.parse(localStorage.getItem('ak2_loc')||'{"city":"Ahmedabad","state":"Gujarat","aqi":""}');
+let curHM = 'all', curMonth = new Date().getMonth(), curYear = new Date().getFullYear();
+const API_KEY = 'ak2_key';
+
+/* ═══════════ BOOT ═══════════ */
+window.onload = ()=>{
+  // Restore location inputs
+  document.getElementById('inCity').value = LOC.city||'Ahmedabad';
+  document.getElementById('inState').value = LOC.state||'Gujarat';
+  document.getElementById('inAqi').value = LOC.aqi||'';
+  const k = localStorage.getItem(API_KEY);
+  if(k) document.getElementById('apiIn').value = k;
+
+  tick(); setInterval(tick, 30000);
+  renderFam(); calcRoti(); renderTracker(); renderMantra(); renderRashiGrid();
+  showSeasonAuto(); loadDashAi();
+  const st = document.getElementById('apiSt');
+  if(k){st.textContent='✅ API key active';st.style.color='var(--sprout)'}
+};
+
+/* ═══════════ TICK ═══════════ */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const NAKS=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+
+function tick(){
+  const n = new Date();
+  const nak = NAKS[Math.floor(n.getTime()/86400000+7)%27];
+  const ritu = getRitu(n.getMonth());
+  const aqi = LOC.aqi||'—';
+  const aqiCls = !LOC.aqi?'':LOC.aqi<51?'aqi-g':LOC.aqi<101?'aqi-m':'aqi-b';
+
+  setText('ctxTime',`${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS_S[n.getMonth()]} · ${n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`);
+  setText('ctxCity',`${LOC.city}, ${LOC.state}`);
+  setText('ctxRitu', ritu.name);
+  setText('ctxNak', nak);
+  const aqiEl = document.getElementById('ctxAqi');
+  aqiEl.textContent = aqi; aqiEl.className = 'ctx-val '+aqiCls;
+  setText('ctxFam', `${FAM.length} member${FAM.length!==1?'s':''}`);
+
+  setText('ds-fam', FAM.length);
+  setText('ds-ritu', ritu.icon);
+  const aqiStat = document.getElementById('ds-aqi');
+  aqiStat.textContent = aqi; aqiStat.className = 'dstat-val '+aqiCls;
+
+  updateQuote(n);
+  renderRituDash(ritu, nak, n);
+  renderDashFamGrid();
+  document.getElementById('hDateLbl').textContent = `${DAYS[n.getDay()]}, ${n.getDate()} ${MONTHS_S[n.getMonth()]}`;
+}
+
+function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+
+/* ═══════════ RITU ═══════════ */
+const RITU_DATA = {
+  summer:{id:'summer',name:'Grishma (Summer)',icon:'☀️',period:'March – June',temp:'40–45°C',dosha:'Pitta ↑↑',
+    hBg:'var(--pitta-bg)',hBorder:'var(--pitta-b)',hColor:'var(--pitta-r)',
+    tagline:'Cool the fire — Sheeta foods dominate',
+    principle:'Ahmedabad summer chronically aggravates Pitta dosha with extreme heat (40–45°C), intense UV, and industrial air. Jowar leads the roti as the cooling millet. Ghee is maximized — the best Pitta-pacifier. Coconut powder and coconut water are mandatory. Bajra and Soya are reduced — both are Ushna (heating). No spice additions to roti.',
+    pills:['Pitta ↑↑','Sheeta foods','Cooling millets','Max ghee','Coconut water'],
+    pillColors:['#F7C1C1','#EAF3DE','#EAF3DE','#FAEEDA','#E6F1FB'],
+    flours:{Jowar:'90g',Chana:'90g',Gehu:'72g',Soya:'45g',Bajra:'36g','Coconut powder':'27g'},
+    herbs:['Flaxseed 12g','Methi 5g','Pumpkin seed 8g','Turmeric ½ tsp','Ajwain+Hing pinch','Iodized sendha salt ¾ tsp'],
+    wet:{Milk:'200–220ml (boiling hot)','Ghee in dough':'1 tbsp (increased for Pitta)','Finishing smear':'1 dot per roti'},
+    alongside:['Coconut water mid-morning — Mg+K+Na lost in 45°C sweat','Fresh amla / lemon water with lunch — Vitamin C triples iron absorption','Chaas (spiced buttermilk) post-lunch — Pitta-cooling + probiotics','2 Brazil nuts at breakfast — full daily Selenium'],
+    dos:['Jowar 90g as lead flour — Charaka Samhita classifies it Sheeta (cooling), the ideal Grishma millet','Ghee 1 tbsp in dough — single most effective Pitta-pacifier in Ayurveda; carries fat-soluble nutrients','Coconut powder 27g — cooling MCT fats, electrolytes, prevents dehydration-related fatigue','Coconut water mid-morning every day — replenishes Mg, K, Na lost through 40–45°C sweating','Fresh amla or lemon water with every lunch — Vitamin C triples non-heme iron absorption','Morning walk 6:00–6:30 AM before roti prep — free 1,500–2,000 IU Vitamin D3 from Ahmedabad sun','Chaas (spiced buttermilk) post-lunch — probiotics + Pitta-cooling + digestive enzyme support','Cook on HIGH heat only, 25–30 sec per side — turmeric burns bitter on low heat, ruins benefit','Apply ghee immediately off tawa — activates turmeric curcumin, Omega-3, Vitamin A (all fat-soluble)','Store in cotton cloth inside steel dabba — stays perfectly soft for 6+ hours in any heat'],
+    donts:['Do NOT use 72g Bajra in summer — Ushna (heating) nature worsens Pitta in 45°C Ahmedabad heat','Do NOT use 72g Soya — Ushna + goitrogenic; compounds thyroid suppression risk for female especially','Do NOT add chilli, black pepper, or garam masala to summer rotis — extreme Pitta aggravation','Do NOT cook on low heat — moisture evaporates, roti hardens within 1 hour, turmeric turns bitter and toxic','Do NOT skip ghee finishing smear — Omega-3, curcumin, Vitamin A lose 60–70% bioavailability without fat','Do NOT add honey to hot milk — Ayurvedic texts: honey above 40°C becomes Ama (metabolic toxin)','Do NOT skip morning walk — Vitamin D3 is heat-sensitive; sun is the only practical vegetarian source','Do NOT eat leftover rotis after 6 hours in summer — millet content spoils rapidly at 40°C+']},
+
+  monsoon:{id:'monsoon',name:'Varsha (Monsoon)',icon:'🌧️',period:'July – September',temp:'28–35°C, High humidity',dosha:'Vata + Pitta ↑',
+    hBg:'var(--monsoon-bg)',hBorder:'var(--monsoon-b)',hColor:'var(--monsoon-r)',
+    tagline:'Protect the Agni — warm, freshly cooked food only',
+    principle:'Monsoon is the weakest Agni (digestive fire) season. Varsha disturbs Vata (dryness, erratic movement) while remnant summer Pitta lingers. Gehu leads the roti as the most grounding flour. Dry ginger (saunth) and Ajwain are critical — they re-ignite suppressed Agni. Raw food, cold water, and curd at night are explicitly prohibited in Ashtanga Hridayam for Varsha Ritu.',
+    pills:['Vata+Pitta','Weakest Agni','Warm foods only','No raw food','No curd night'],
+    pillColors:['#B5D4F4','#E6F1FB','#FAEEDA','#FCEBEB','#FCEBEB'],
+    flours:{Gehu:'90g',Jowar:'72g',Chana:'72g',Soya:'54g',Bajra:'54g','Rice flour':'18g'},
+    herbs:['Flaxseed 12g','Dry ginger (saunth) ½ tsp','Ajwain 1 tsp (↑ increased)','Hing ¼ tsp (↑ increased)','Turmeric ½ tsp','Pumpkin seed 8g','Iodized sendha salt ¾ tsp'],
+    wet:{Milk:'190–210ml (boiling hot)','Ghee in dough':'¾ tbsp','Finishing smear':'1 dot per roti'},
+    alongside:['Warm jeera water before meals — Agni activator, digestive enzymes, anti-parasitic','Tulsi + dry ginger tea every morning — anti-viral immunity, monsoon respiratory protection','Room-temperature lemon water (NOT cold) — Vitamin C + iron absorption; cold water shocks Agni','2 Brazil nuts at breakfast — Selenium is the #1 immunity mineral in monsoon infection season'],
+    dos:['Dry ginger (saunth) ½ tsp in dough — Ahmedabad monsoon suppresses Agni; saunth is the Ayurvedic re-igniter','Ajwain 1 tsp + Hing ¼ tsp — monsoon + chana + soya = severe bloating; these are the prevention','Rice flour 18g — most easily digestible carbohydrate for the weakest Agni season of the year','Gehu as lead flour at 90g — most grounding and Vata-stabilizing of all flours in wet season','Drink warm jeera water before every meal — activates digestive enzymes suppressed by monsoon humidity','Tulsi + ginger herbal tea every morning — peak viral and bacterial infection season in Ahmedabad','All food freshly cooked and warm — cold or leftover food ferments in high humidity in hours','Eat B12-fortified dahi at lunch only (not dinner) — probiotics needed, but dahi at dinner is prohibited'],
+    donts:['Do NOT eat raw salads or uncooked vegetables — monsoon bacteria heavily contaminate raw produce','Do NOT eat curd at night in monsoon — explicitly prohibited in Ashtanga Hridayam for Varsha Ritu','Do NOT drink cold water or cold beverages — severely damages the already weak monsoon Agni','Do NOT eat stale or leftover roti after 4 hours — high humidity causes rapid millet spoilage','Do NOT reduce Ajwain + Hing — gas and bloating are the #1 digestive complaint in monsoon','Do NOT use coconut powder in monsoon — heavy MCT fats + humidity = Kapha increase and sluggish digestion','Do NOT eat outside street food in Ahmedabad monsoon — water contamination risk is extreme','Do NOT skip the 10-min dough rest — rice flour MUST hydrate fully or it creates gritty texture']},
+
+  autumn:{id:'autumn',name:'Sharad (Autumn)',icon:'🍂',period:'October – November',temp:'25–32°C',dosha:'Pitta residual',
+    hBg:'var(--autumn-bg)',hBorder:'var(--autumn-b)',hColor:'var(--autumn-r)',
+    tagline:'Peak Ojas season — build immunity reserves now',
+    principle:"Sharad is Ahmedabad's finest season. Agni is strong, weather is pleasant, and the body absorbs and stores nutrients at peak efficiency. This is the Ojas (vital immunity essence) building window. Run the full 5-flour blend at maximum dose. Fresh amla is in season across Gujarat — eat 2 daily. Chyawanprash is the Ayurvedic Ojas compound for this season.",
+    pills:['Ojas peak','Strong Agni','Full 5 flours','Amla season','25–32°C'],
+    pillColors:['#EAF3DE','#EAF3DE','#EAF3DE','#FAEEDA','#E6F1FB'],
+    flours:{Jowar:'72g',Chana:'72g',Gehu:'72g',Bajra:'72g',Soya:'72g'},
+    herbs:['Flaxseed 12g','Turmeric ½ tsp','Methi seed 5g','Pumpkin seed 8g','Amla powder 1 tsp (NEW — Vitamin C)','Ajwain+Hing pinch','Iodized sendha salt ¾ tsp'],
+    wet:{Milk:'180–200ml (hot)','Ghee in dough':'¾ tbsp','Finishing smear':'1 dot per roti'},
+    alongside:['Fresh amla (peak Gujarat season!) — eat 2 daily; highest natural Vitamin C + Ojas builder','Chyawanprash 1 tsp every morning — definitive Ayurvedic Ojas compound: 40+ herbs','Lemon water with lunch — maintain Vitamin C + iron absorption year-round','2 Brazil nuts at breakfast — Selenium year-round non-negotiable'],
+    dos:['Full 5-flour blend at 72g each — Agni is at its strongest; body can absorb maximum nutrition now','Amla powder 1 tsp in dough — Sharad is Gujarat amla season; stable form of Vitamin C in cooking','Chyawanprash 1 tsp every morning — one compound covers more nutritional gaps than any individual supplement','Eat 2 fresh amla daily alongside lunch — peak season; maximum Vitamin C, antioxidants, and Ojas','Intensify exercise in Sharad — pleasant 25°C weather + strong Agni = best muscle-building window of the year','Build nutrition loading now — every nutrient stored in Sharad becomes winter immunity reserve','Sleep by 10 PM — Sharad nights support deep recovery sleep and maximum Ojas accumulation','Eat seasonal Gujarat fruits: pomegranate, guava, banana — rich Vitamin C and antioxidant loading'],
+    donts:["Do NOT skip Sharad nutrition loading — this is the ONLY window to store Ojas reserves for winter","Do NOT skip Chyawanprash — one compound covers more gaps than any individual supplement","Do NOT overeat sweet foods — high fruit season; excess sugar load destroys the Ojas being built","Do NOT use packaged/processed foods — absorption is at peak; don't waste on poor quality nutrition","Do NOT skip Turmeric in dough — liver requires daily curcumin regardless of how good the season is","Do NOT reduce Flaxseed from dough — Omega-3 is a 365-day need, not a seasonal addition"]},
+
+  winter:{id:'winter',name:'Hemant (Winter)',icon:'❄️',period:'December – February',temp:'10–22°C · AQI 150–200',dosha:'Kapha ↑',
+    hBg:'var(--winter-bg)',hBorder:'var(--winter-b)',hColor:'var(--winter-r)',
+    tagline:'Stoke the Agni — warm, dense, nourishing food',
+    principle:'Hemant is Kapha season in Ahmedabad. Cold air + dry conditions + AQI 150–200 demands warming foods, strong digestive fire, and lung antioxidant armor. Sesame (til) becomes the Hemant superfood. Black pepper + turmeric creates 2000× better curcumin bioavailability. Bajra leads the roti. Digestion is actually strongest in Hemant — increase overall food intake by 15–20%.',
+    pills:['Kapha ↑','AQI 150–200','Bajra leads','Black pepper','Sesame/Til'],
+    pillColors:['#EEEDFE','#EEEDFE','#FAEEDA','#FAEEDA','#FAEEDA'],
+    flours:{Bajra:'90g',Chana:'72g',Soya:'72g',Gehu:'72g',Jowar:'54g'},
+    herbs:['Flaxseed 12g','Sesame (til) powder 15g (NEW — Calcium+warming)','Black pepper ½ tsp (NEW — 20% absorption boost)','Dry ginger (saunth) ¼ tsp','Turmeric ¾ tsp (increased)','Pumpkin seed 8g','Ajwain+Hing ½ tsp+pinch','Iodized sendha salt ¾ tsp'],
+    wet:{Milk:'210–230ml (boiling hot — most of all seasons)','Ghee in dough':'1 tbsp (Vata lubricant for winter dryness)','Finishing smear':'generous dot per roti'},
+    alongside:['Tulsi + ginger + black pepper tea every morning — AQI 150–200 lung protection + anti-viral','Til (sesame) laddoos mid-morning — Makar Sankranti tradition = nutritionally validated for Hemant','Warm lemon water (NOT cold) with lunch — Vitamin C + iron absorption; always warm in winter','2 Brazil nuts at breakfast — Selenium; peak immunity need in winter respiratory infection season'],
+    dos:['Bajra 90g as lead flour — warmest millet, highest Mg + iron, the traditional Gujarati winter staple','Sesame (til) powder 15g in dough — Calcium + warming + Kapha↓ + winter joint protection; the Hemant superfood','Black pepper ½ tsp — piperine boosts ALL other herb and nutrient absorption by 20% (proven clinically)','Dry ginger (saunth) ¼ tsp — essential for Ahmedabad AQI 150–200 lung protection and anti-inflammation','Turmeric increased to ¾ tsp — black pepper synergy creates 2000× better curcumin bioavailability','Tulsi + ginger + black pepper tea every morning — respiratory armor against winter Ahmedabad AQI','Til laddoos as mid-morning snack — Makar Sankranti tradition is clinically nutritionally validated','Use jaggery (gur) in night milk instead of honey — warming quality of jaggery is superior in winter'],
+    donts:["Do NOT skip sesame (til) — Ahmedabad winters cause joint stiffness; til is the traditional nutritional fix","Do NOT use cold milk or cold water in dough — instantly weakens winter Agni and makes millet brittle","Do NOT skip black pepper — piperine multiplies the value of every other herb in the entire recipe","Do NOT eat summer cooling foods (cold coconut water, raw cucumber, cold salads) — increases Kapha","Do NOT skip morning walk — Ahmedabad winter sun is mild but it is the only free Vitamin D3 source","Do NOT eat after 8 PM — late eating freezes Agni when the body needs to rest and repair overnight","Do NOT reduce ghee — primary Vata lubricant preventing winter joint dryness and skin cracking","Do NOT ignore high AQI days — AQI > 200: add extra ¼ tsp turmeric to morning milk as well"]}
+};
+
+function getRitu(month){
+  if(month>=2&&month<=5) return RITU_DATA.summer;
+  if(month>=6&&month<=8) return RITU_DATA.monsoon;
+  if(month>=9&&month<=10) return RITU_DATA.autumn;
+  return RITU_DATA.winter;
+}
+
+function renderRituDash(r, nak, n){
+  document.getElementById('rituDashName').textContent = r.name;
+  const card = document.getElementById('rituDashCard');
+  card.style.background = r.hBg;
+  card.style.borderColor = r.hBorder;
+  const body = document.getElementById('rituDashBody');
+  body.innerHTML = `
+    <div style="margin-bottom:.6rem">
+      ${r.pills.map((p,i)=>`<span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:.68rem;font-weight:500;border:1px solid rgba(0,0,0,.12);background:${r.pillColors[i]};margin:2px;color:${r.hColor}">${p}</span>`).join('')}
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:${r.hColor};margin-bottom:.5rem">"${r.tagline}"</div>
+    <div style="font-size:.82rem;color:${r.hColor};line-height:1.6;opacity:.9">${r.principle}</div>
+    <div style="margin-top:.85rem;font-size:.78rem;color:${r.hColor};opacity:.7">⭐ Today's Nakshatra: ${nak} &nbsp;·&nbsp; ${r.period} &nbsp;·&nbsp; ${r.temp}</div>`;
+}
+
+function showSeasonAuto(){
+  const cur = getRitu(new Date().getMonth());
+  const tabs = document.querySelectorAll('.stab');
+  tabs.forEach(t=>t.className='stab');
+  tabs.forEach(t=>{ if(t.textContent.toLowerCase().includes(cur.id)) t.className=`stab a-${cur.id}`; });
+  renderSeason(cur.id);
+}
+
+function showSeason(id,el){
+  document.querySelectorAll('.stab').forEach(t=>t.className='stab');
+  el.className=`stab a-${id}`;
+  renderSeason(id);
+}
+
+function renderSeason(id){
+  const d = RITU_DATA[id];
+  const flourRows = Object.entries(d.flours).map(([k,v])=>
+    `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  const herbPills = d.herbs.map(h=>`<span class="herb-pill">${h}</span>`).join('');
+  const wetRows = Object.entries(d.wet).map(([k,v])=>
+    `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  const alRows = d.alongside.map(a=>`<div style="padding:4px 0;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--earth)">${a}</div>`).join('');
+  const dosHTML = d.dos.map(i=>`<div class="dos-item"><span class="dos-bullet">•</span><span>${i}</span></div>`).join('');
+  const dontsHTML = d.donts.map(i=>`<div class="dont-item"><span class="dont-bullet">×</span><span>${i}</span></div>`).join('');
+  document.getElementById('seasonOut').innerHTML = `
+    <div class="s-banner" style="background:${d.hBg};border:1px solid ${d.hBorder}">
+      <div class="s-eye" style="color:${d.hColor}">${d.icon} ${d.id.toUpperCase()} RITU — AHMEDABAD</div>
+      <div class="s-title" style="color:${d.hColor}">${d.name}</div>
+      <div class="s-period" style="color:${d.hColor}">${d.period} · ${d.temp} · ${d.dosha}</div>
+      <div style="margin-bottom:.5rem">${d.pills.map((p,i)=>`<span class="s-pill" style="background:${d.pillColors[i]};color:${d.hColor}">${p}</span>`).join('')}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:${d.hColor};margin-bottom:.65rem">"${d.tagline}"</div>
+      <div class="s-principle" style="color:${d.hColor}">${d.principle}</div>
+    </div>
+    <div class="formula-wrap">
+      <div class="card">
+        <div class="ct">🌾 Flour blend (for 12 rotis)</div>
+        <table class="flour-table">${flourRows}<tr><td style="font-weight:600">Total</td><td style="font-weight:600;color:var(--leaf)">${Object.values(d.flours).reduce((s,v)=>s+parseInt(v),0)}g</td></tr></table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:.75rem">
+          <div class="ct">🌿 Herbs in dough</div>
+          <div>${herbPills}</div>
+        </div>
+        <div class="card">
+          <div class="ct">💧 Wet ingredients</div>
+          <table class="flour-table">${wetRows}</table>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:1rem">
+      <div class="ct">🍋 Alongside (not in roti)</div>
+      ${alRows}
+    </div>
+    <div class="dos-grid">
+      <div class="dos-box"><div class="dos-ttl">✅ Do's — ${d.name}</div>${dosHTML}</div>
+      <div class="dont-box"><div class="dont-ttl">🚫 Don'ts — ${d.name}</div>${dontsHTML}</div>
+    </div>`;
+}
+
+/* ═══════════ LOCATION ═══════════ */
+function saveLoc(){
+  LOC.city = document.getElementById('inCity').value||'Ahmedabad';
+  LOC.state = document.getElementById('inState').value||'Gujarat';
+  LOC.aqi = document.getElementById('inAqi').value||'';
+  localStorage.setItem('ak2_loc', JSON.stringify(LOC));
+  tick();
+}
+
+/* ═══════════ FAMILY ═══════════ */
+const DC = {Vata:{c:'#0C447C',bg:'#E6F1FB'},Pitta:{c:'#791F1F',bg:'#FCEBEB'},Kapha:{c:'#26215C',bg:'#EEEDFE'},'Vata-Pitta':{c:'#543880',bg:'#F0EDFB'},'Pitta-Kapha':{c:'#5C2060',bg:'#FAE8FB'},'Vata-Kapha':{c:'#184860',bg:'#E0EEF4'},Tridosha:{c:'#173404',bg:'#EAF3DE'}};
+function getDC(p){return DC[p.split(' — ')[0]]||DC.Tridosha}
+function getEmoji(g){return g==='male'?'👨':g==='child'?'🧒':'👩'}
+function rotisFor(m){
+  const base = m.gender==='child'?1.5:m.gender==='male'?4:3;
+  return Math.round(base*(m.weight>80?1:m.weight<45?.8:1)*10)/10;
+}
+
+function bulkAddSlots(){
+  const n = parseInt(document.getElementById('inFamCount').value)||2;
+  for(let i=FAM.length;i<n;i++) openAdd();
+  if(n<=FAM.length) alert(`You already have ${FAM.length} members. Use ➕ Add individual member.`);
+}
+
+function renderFam(){
+  const wrap = document.getElementById('membersWrap');
+  let html = FAM.map((m,i)=>{
+    const dc = getDC(m.prakriti||'Tridosha');
+    return `<div class="mcard filled">
+      <button class="mcard-rmv" onclick="rmvMember(${i})">✕</button>
+      <div class="mcard-avatar">${getEmoji(m.gender)}</div>
+      <div class="mcard-name">${m.name}</div>
+      <div class="mcard-detail">${m.age} yrs · ${m.weight} kg · ${m.gender}<br>${m.rashi||'Rashi not set'}</div>
+      <span class="dtag" style="color:${dc.c};background:${dc.bg}">${(m.prakriti||'').split(' — ')[0]}</span>
+      <div style="font-size:.72rem;color:var(--sprout);margin-top:5px;font-weight:500">${rotisFor(m)} rotis / lunch</div>
+    </div>`;
+  }).join('');
+  html += `<div class="add-card" onclick="openAdd()"><div style="font-size:2rem;color:var(--muted)">➕</div><div style="font-size:.8rem;color:var(--muted);font-weight:500;margin-top:.4rem">Add member</div></div>`;
+  wrap.innerHTML = html;
+  updateHabitTabs(); renderDashFamGrid(); renderFamRashiBoard(); calcRoti();
+  document.getElementById('ctxFam').textContent = `${FAM.length} member${FAM.length!==1?'s':''}`;
+  document.getElementById('ds-fam').textContent = FAM.length;
+}
+
+function renderDashFamGrid(){
+  const g = document.getElementById('dashFamGrid');
+  if(!FAM.length){g.innerHTML='<div style="text-align:center;padding:1rem;border:2px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.8rem;cursor:pointer" onclick="showTab(\'family\')">➕ Add family members in Family Setup</div>';return;}
+  const ritu = getRitu(new Date().getMonth());
+  g.innerHTML = FAM.map(m=>{
+    const dc = getDC(m.prakriti||'Tridosha');
+    return `<div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.85rem;text-align:center">
+      <div style="font-size:1.5rem;margin-bottom:3px">${getEmoji(m.gender)}</div>
+      <div style="font-size:.85rem;font-weight:500;color:var(--earth)">${m.name}</div>
+      <div style="font-size:.72rem;color:var(--muted)">${m.age}y · ${m.weight}kg</div>
+      <span class="dtag" style="color:${dc.c};background:${dc.bg};margin-top:4px">${(m.prakriti||'').split(' — ')[0]}</span>
+      <div style="margin-top:5px;font-size:.72rem;color:var(--sprout);font-weight:500">${rotisFor(m)} rotis · ${ritu.icon}</div>
+    </div>`;
+  }).join('');
+}
+
+function openAdd(){document.getElementById('addOv').classList.add('open')}
+function closeAdd(){document.getElementById('addOv').classList.remove('open')}
+function saveMember(){
+  const name=document.getElementById('mN').value.trim();
+  const age=parseInt(document.getElementById('mA').value);
+  const weight=parseFloat(document.getElementById('mW').value);
+  if(!name||!age||!weight){alert('Please fill in Name, Age and Weight.');return;}
+  FAM.push({name,age,weight,gender:document.getElementById('mG').value,rashi:document.getElementById('mR').value,prakriti:document.getElementById('mP').value,focus:document.getElementById('mF').value});
+  localStorage.setItem('ak2_fam',JSON.stringify(FAM));
+  closeAdd(); renderFam();
+  ['mN','mA','mW'].forEach(id=>document.getElementById(id).value='');
+}
+function rmvMember(i){if(!confirm(`Remove ${FAM[i].name}?`))return;FAM.splice(i,1);localStorage.setItem('ak2_fam',JSON.stringify(FAM));renderFam();}
+
+/* ═══════════ ROTI CALC ═══════════ */
+const RF = {
+  summer:{Jowar:90,Chana:90,Gehu:72,Soya:45,Bajra:36,'Coconut powder':27},
+  monsoon:{Gehu:90,Jowar:72,Chana:72,Soya:54,Bajra:54,'Rice flour':18},
+  autumn:{Jowar:72,Chana:72,Gehu:72,Bajra:72,Soya:72},
+  winter:{Bajra:90,Chana:72,Soya:72,Gehu:72,Jowar:54}
+};
+const HERBS_S = {
+  summer:['Flaxseed 12g','Methi 5g','Pumpkin seed 8g','Turmeric ½ tsp','Ajwain+Hing pinch','Iodized salt ¾ tsp'],
+  monsoon:['Flaxseed 12g','Saunth ½ tsp','Ajwain 1 tsp','Hing ¼ tsp','Turmeric ½ tsp','Pumpkin seed 8g','Iodized salt ¾ tsp'],
+  autumn:['Flaxseed 12g','Turmeric ½ tsp','Methi 5g','Pumpkin seed 8g','Amla powder 1 tsp','Ajwain+Hing pinch','Iodized salt ¾ tsp'],
+  winter:['Flaxseed 12g','Sesame (til) 15g','Black pepper ½ tsp','Saunth ¼ tsp','Turmeric ¾ tsp','Pumpkin seed 8g','Ajwain ½ tsp+Hing','Iodized salt ¾ tsp']
+};
+const NUTR3 = {summer:{p:22.1,f:9.4,i:6.1},monsoon:{p:21.3,f:8.8,i:5.9},autumn:{p:22.5,f:9.6,i:6.3},winter:{p:23.2,f:9.1,i:6.8}};
+
+function calcRoti(){
+  const n = parseInt(document.getElementById('rCount').value)||12;
+  const s = document.getElementById('rSeason').value;
+  const sc = n/12;
+  const d = RITU_DATA[s];
+  let rows='',total=0;
+  for(const[k,v] of Object.entries(RF[s])){
+    const scaled=Math.round(v*sc);total+=scaled;
+    rows+=`<tr><td class="flour-name">${k}</td><td class="flour-g">${scaled}g</td></tr>`;
+  }
+  rows+=`<tr><td style="font-weight:600;font-size:.85rem">Total flour</td><td style="font-weight:700;color:var(--leaf)">${total}g</td></tr>`;
+  const milk=Math.round(n*17); const ghee=(n*.2).toFixed(1);
+  const nt = NUTR3[s];
+  document.getElementById('rotiOut').innerHTML = `
+    <div style="background:${d.hBg};border:1px solid ${d.hBorder};border-radius:10px;padding:.85rem;margin-bottom:.85rem">
+      <div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:${d.hColor};font-weight:600;margin-bottom:.3rem">${d.icon} ${d.name} Formula</div>
+      <div style="font-size:.8rem;color:${d.hColor};opacity:.85">${d.tagline}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.85rem">
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Flour blend</div>
+        <table class="flour-table">${rows}</table>
+      </div>
+      <div>
+        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Wet ingredients</div>
+        <table class="flour-table">
+          <tr><td>A2 milk (boiling hot)</td><td>${milk}–${milk+20}ml</td></tr>
+          <tr><td>Ghee in dough</td><td>${ghee} tbsp</td></tr>
+          <tr><td>Ghee finishing smear</td><td>${n} × dot</td></tr>
+        </table>
+        <div style="margin-top:.85rem">
+          <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Herbs in dough</div>
+          <div>${HERBS_S[s].map(h=>`<span class="herb-pill">${h}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="nutr-boxes">
+      <div class="nbox"><div class="nval">${nt.p}g</div><div class="nlbl">Protein / 3 rotis</div></div>
+      <div class="nbox"><div class="nval">${nt.f}g</div><div class="nlbl">Fiber / 3 rotis</div></div>
+      <div class="nbox"><div class="nval">${nt.i}mg</div><div class="nlbl">Iron / 3 rotis</div></div>
+      <div class="nbox"><div class="nval">920mg</div><div class="nlbl">Omega-3 ALA</div></div>
+    </div>`;
+  renderPPTable(s);
+}
+
+function renderPPTable(s){
+  const el=document.getElementById('ppTable');
+  if(!FAM.length){el.innerHTML='<p style="font-size:.82rem;color:var(--muted)">Add family members to see personalised breakdown.</p>';return;}
+  const nt=NUTR3[s];
+  let h=`<table class="pp-table"><thead><tr><th>Member</th><th>Gender</th><th>Weight</th><th>Rotis</th><th>Protein</th><th>Fiber</th><th>Iron</th><th>% Daily protein</th></tr></thead><tbody>`;
+  FAM.forEach(m=>{
+    const r=rotisFor(m); const f=r/3;
+    const pTgt=m.gender==='male'?Math.round(m.weight*1.5):m.gender==='child'?Math.round(m.weight*.9):Math.round(m.weight*1.2);
+    const pGot=(nt.p*f).toFixed(1); const pPct=Math.min(100,Math.round((pGot/pTgt)*100));
+    h+=`<tr>
+      <td><strong>${getEmoji(m.gender)} ${m.name}</strong></td>
+      <td style="color:var(--muted)">${m.gender}</td>
+      <td>${m.weight} kg</td>
+      <td style="color:var(--saffron);font-weight:600">${r}</td>
+      <td>${pGot}g</td>
+      <td>${(nt.f*f).toFixed(1)}g</td>
+      <td>${(nt.i*f).toFixed(1)}mg</td>
+      <td>${pPct}%<div class="progress"><div class="pbar" style="width:${pPct}%"></div></div></td>
+    </tr>`;
+  });
+  h+=`</tbody></table>`;
+  el.innerHTML=h;
+}
+
+/* ═══════════ QUOTES ═══════════ */
+const QS=[
+  {s:'आहारः शुद्धे सत्त्वशुद्धिः',m:'When food is pure, the mind becomes pure. — Chandogya Upanishad'},
+  {s:'स्वस्थस्य स्वास्थ्य रक्षणं',m:'To protect the health of the healthy — first duty of Ayurveda. — Charaka Samhita'},
+  {s:'हिताहारी सदा रोगी न भवेत्',m:'One who always eats what is beneficial never becomes ill. — Ashtanga Hridayam'},
+  {s:'प्रकृतिः परमो धर्मः',m:'Nature is the highest dharma. Live in harmony with it. — Manusmriti'},
+  {s:'सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामयाः',m:'May all beings be happy. May all be free from illness. — Brihadaranyaka Upanishad'},
+  {s:'नास्ति तेजः समं तपः',m:'There is no austerity equal to the discipline of proper eating. — Mahabharata'},
+  {s:'ओजः प्राणस्य मूलं च',m:'Ojas (vital essence) is the very root of life-force. Protect it daily. — Charaka'},
+];
+function updateQuote(d){const q=QS[d.getDay()%QS.length];document.getElementById('qSkt').textContent=q.s;document.getElementById('qMean').textContent=`"${q.m}"`;}
+
+/* ═══════════ HABITS ═══════════ */
+const HMASTER=[
+  {id:'walk',icon:'🚶',n:'Morning walk (20 min)',w:'Free Vitamin D3 · Kapha management · Ahmedabad sun 6–7 AM'},
+  {id:'roti',icon:'🫓',n:'Multivitamin rotis prepared',w:'18 nutrients · seasonal formula · B-complex + iron + fiber + Omega-3'},
+  {id:'lemon',icon:'🍋',n:'Lemon water / amla with lunch',w:'Vitamin C · 3× iron absorption from roti · antioxidant protection'},
+  {id:'nmilk',icon:'🌙',n:'Night milk at 9:30 PM',w:'Ashwagandha / Shatavari · hormone support · Ojas building'},
+  {id:'mantra',icon:'🕉',n:'Mantra or meditation',w:'Mental health · cortisol reduction · Vata calming · Sattva'},
+  {id:'brazil',icon:'🥜',n:'2 Brazil nuts',w:'Full daily Selenium · thyroid · immunity — year-round non-negotiable'},
+  {id:'b12',icon:'💊',n:'B12 supplement / fortified dahi',w:'Most critical vegetarian deficiency · nervous system · mood · energy'},
+  {id:'water',icon:'💧',n:'2.5–3 litres warm water',w:'Hydration · Ahmedabad heat · electrolyte balance · Agni support'},
+  {id:'sleep',icon:'😴',n:'Sleep by 10:30 PM',w:'Ojas accumulation · melatonin · Vata-Pitta balance · deep repair'},
+  {id:'fruit',icon:'🍎',n:'Seasonal fresh fruit',w:'Vitamins · antioxidants · Ojas building · fibre · immunity'},
+  {id:'noraw',icon:'🥗',n:'No raw food after sunset',w:'Ayurveda: raw food at night suppresses Agni · weak night digestion'},
+  {id:'grat',icon:'🙏',n:'Gratitude or prayer',w:'Sattva (purity) · emotional health · holistic wellbeing'}
+];
+function getTodayKey(){const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
+function updateHabitTabs(){
+  const el=document.getElementById('hMemberTabs');
+  let h=`<div class="mtab act" onclick="selHM('all',this)">Everyone</div>`;
+  FAM.forEach(m=>h+=`<div class="mtab" onclick="selHM('${m.name}',this)">${getEmoji(m.gender)} ${m.name}</div>`);
+  el.innerHTML=h;
+}
+function selHM(n,el){document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('act'));el.classList.add('act');curHM=n;renderHabitList();}
+function renderHabitList(){
+  const key=`${curHM}_${getTodayKey()}`;
+  const done=HAB[key]||{};
+  document.getElementById('habitList').innerHTML=HMASTER.map(h=>{
+    const ck=done[h.id];
+    return `<div class="habit-item">
+      <div class="h-icon">${h.icon}</div>
+      <div class="h-text"><div class="h-name">${h.n}</div><div class="h-why">${h.w}</div></div>
+      <div class="h-chk${ck?' done':''}" onclick="togHabit('${h.id}','${key}',this)">${ck?'✓':''}</div>
+    </div>`;
+  }).join('');
+  updateScore(done);
+}
+function togHabit(id,key,el){
+  if(!HAB[key])HAB[key]={};
+  if(HAB[key][id]){delete HAB[key][id];el.classList.remove('done');el.textContent='';}
+  else{HAB[key][id]=true;el.classList.add('done');el.textContent='✓';}
+  updateScore(HAB[key]);
+}
+function updateScore(done){
+  const c=Object.keys(done||{}).length;
+  document.getElementById('todayScore').textContent=`${c}/${HMASTER.length}`;
+  document.getElementById('ds-streak').textContent=calcStreak()+'🔥';
+}
+function calcStreak(){
+  let s=0;const t=new Date();
+  for(let i=0;i<365;i++){const d=new Date(t);d.setDate(d.getDate()-i);const k=`${curHM}_${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;const done=HAB[k]||{};if(Object.keys(done).length>=Math.ceil(HMASTER.length*.6))s++;else if(i>0)break;}
+  return s;
+}
+function saveHabits(){localStorage.setItem('ak2_hab',JSON.stringify(HAB));renderStreakDays();const b=document.querySelector('.btn-s');if(b){b.textContent='✓ Saved!';setTimeout(()=>b.textContent='Save today ✓',1500);}}
+function renderTracker(){renderHabitList();renderStreakDays();updateMnavLbl();}
+function renderStreakDays(){
+  const t=new Date(),dim=new Date(curYear,curMonth+1,0).getDate();
+  let h='';
+  for(let d=1;d<=dim;d++){
+    const k=`${curHM}_${curYear}-${curMonth+1}-${d}`;
+    const c=Object.keys(HAB[k]||{}).length;
+    const isT=d===t.getDate()&&curMonth===t.getMonth()&&curYear===t.getFullYear();
+    const cls=c>=HMASTER.length?'done':c>0?'part':'';
+    h+=`<div class="sd ${cls}${isT?' today':''}" title="${d}: ${c}/${HMASTER.length}">${d}</div>`;
+  }
+  document.getElementById('streakDays').innerHTML=h;
+  document.getElementById('bestStreak').textContent=calcStreak();
+}
+function changeMonth(d){curMonth+=d;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}updateMnavLbl();renderStreakDays();}
+function updateMnavLbl(){document.getElementById('mnavLbl').textContent=`${MONTHS[curMonth]} ${curYear}`;}
+
+/* ═══════════ MANTRAS ═══════════ */
+const MAN=[
+  {day:'Sunday',deity:'Surya Dev',text:'ॐ घृणि सूर्य आदित्यः',meaning:'O radiant Sun, giver of light and life, bless us with vitality and good health. Drive away disease with your healing rays.',count:'11 or 108 times'},
+  {day:'Monday',deity:'Chandra Dev',text:'ॐ सों सोमाय नमः',meaning:'I bow to the nourishing Moon, the sustainer of all plants and minds. Grant us calm, clarity, and Ojas.',count:'11 or 108 times'},
+  {day:'Tuesday',deity:'Hanuman Ji',text:'ॐ हं हनुमते नमः',meaning:'I bow to Hanuman, embodiment of strength, stamina and devotion. Grant our family courage and immunity.',count:'11 or 108 times'},
+  {day:'Wednesday',deity:'Ganesha',text:'ॐ गं गणपतये नमः',meaning:'I bow to Ganesha, remover of obstacles. Clear our path toward health, wisdom, and holistic wellbeing.',count:'11 or 108 times'},
+  {day:'Thursday',deity:'Guru Dev',text:'ॐ बृं बृहस्पतये नमः',meaning:'I bow to Brihaspati, Jupiter, the teacher of wisdom. Grant us knowledge, discernment, and right action.',count:'11 or 108 times'},
+  {day:'Friday',deity:'Lakshmi Maa',text:'ॐ श्रीं महालक्ष्म्यै नमः',meaning:'I bow to Mahalakshmi, goddess of abundance. Bless our family with health, nourishment, grace, and prosperity.',count:'11 or 108 times'},
+  {day:'Saturday',deity:'Shani Dev',text:'ॐ शं शनैश्चराय नमः',meaning:'I bow to Shani, the disciplined teacher. Teach our family patience, karma, and perseverance in all health practices.',count:'11 or 108 times'},
+];
+function renderMantra(){
+  const n=new Date(),m=MAN[n.getDay()];
+  document.getElementById('mDay').textContent=`${m.day.toUpperCase()} · ${n.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}`;
+  document.getElementById('mDeity').textContent=m.deity;
+  document.getElementById('mText').textContent=m.text;
+  document.getElementById('mMeaning').textContent=m.meaning+` Chant ${m.count}.`;
+  document.getElementById('weekMantras').innerHTML=MAN.map((mn,i)=>{
+    const isT=i===n.getDay();
+    return `<div style="display:flex;align-items:center;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--border);${isT?'background:var(--mist);margin:0 -1.25rem;padding:.6rem 1.25rem':''}">
+      <div style="width:75px;font-size:.72rem;color:var(--muted);font-weight:500">${mn.day}</div>
+      <div style="flex:1">
+        <div style="font-family:'Noto Sans Devanagari',serif;font-size:.92rem;color:var(--leaf)">${mn.text}</div>
+        <div style="font-size:.7rem;color:var(--muted)">${mn.deity}</div>
+      </div>
+      ${isT?'<span style="font-size:.68rem;background:var(--saffron);color:white;padding:2px 8px;border-radius:20px">Today</span>':''}
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════ RASHIFAL ═══════════ */
+const RASHIS=[
+  {n:'Mesh',d:'मेष',s:'♈',el:'Fire'},{n:'Vrishabh',d:'वृषभ',s:'♉',el:'Earth'},
+  {n:'Mithun',d:'मिथुन',s:'♊',el:'Air'},{n:'Karka',d:'कर्क',s:'♋',el:'Water'},
+  {n:'Simha',d:'सिंह',s:'♌',el:'Fire'},{n:'Kanya',d:'कन्या',s:'♍',el:'Earth'},
+  {n:'Tula',d:'तुला',s:'♎',el:'Air'},{n:'Vrischik',d:'वृश्चिक',s:'♏',el:'Water'},
+  {n:'Dhanu',d:'धनु',s:'♐',el:'Fire'},{n:'Makar',d:'मकर',s:'♑',el:'Earth'},
+  {n:'Kumbh',d:'कुम्भ',s:'♒',el:'Air'},{n:'Meen',d:'मीन',s:'♓',el:'Water'},
+];
+const STATIC_RF={
+  Mesh:"A day of initiative. Your Agni is strong — eat well and take action. Best herb: Ashwagandha. Auspicious: 6–8 AM. ॐ क्रां क्रीं — Mars activates your courage today.",
+  Vrishabh:"Grounding energy. Focus on nourishing, seasonal foods. Best herb: Shatavari. Auspicious: 10 AM–12 PM. Patience and consistency are your medicine today.",
+  Mithun:"Mental clarity shines. Light foods support sharp thinking. Best herb: Brahmi. Auspicious: 7–9 AM. Connect with family and share your health wisdom.",
+  Karka:"Nurturing energy surrounds you. Emotional health matters as much as physical. Best herb: Shatavari. Cook for your family today — the act itself is healing.",
+  Simha:"Vitality peaks. Heart and spine need attention. Best herb: Arjuna. Auspicious: 12–2 PM. Lead with generosity and your family naturally follows.",
+  Kanya:"Discernment is your gift. Digestive health is highlighted. Best herb: Triphala. Auspicious: 9–11 AM. Small, consistent improvements compound into great health.",
+  Tula:"Balance guides you. Kidneys and lower back benefit from movement. Best herb: Nettle tea. Create harmony in your home — beauty supports healing.",
+  Vrischik:"Transformative energy. Detoxification is highlighted. Best herb: Turmeric + black pepper. Auspicious: 6–8 AM. Release what no longer serves your highest health.",
+  Dhanu:"Expansion and optimism lift your spirit. Liver health is emphasized. Best herb: Kutki. Share your health knowledge generously — teaching heals the teacher.",
+  Makar:"Discipline serves you. Bone and joint health are highlighted. Best herb: Sesame + Giloy. Consistent effort today plants seeds of long-term vitality.",
+  Kumbh:"Community healing is your theme. Circulation benefits from movement. Best herb: Brahmi + Ashwagandha. Serve your community — seva is medicine.",
+  Meen:"Intuition heightens. Immune and lymphatic health are emphasized. Best herb: Tulsi + amla. Quiet meditation at Brahma Muhurta unlocks your deepest healing wisdom.",
+};
+function renderRashiGrid(){
+  document.getElementById('rashiGrid').innerHTML=RASHIS.map(r=>
+    `<div class="ritem" onclick="selRashi('${r.n}',this)">
+      <div class="rsym">${r.s}</div>
+      <div class="rname">${r.n}</div>
+      <div class="rdev">${r.d} · ${r.el}</div>
+    </div>`).join('');
+}
+function selRashi(name,el){
+  document.querySelectorAll('.ritem').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');
+  loadRashifal(name);
+}
+async function loadRashifal(rashi){
+  const ro=document.getElementById('rashiOut'); ro.style.display='block';
+  const rd=RASHIS.find(r=>r.n===rashi);
+  const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div><div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> Consulting the stars…</div>`;
+  const k=localStorage.getItem(API_KEY);
+  if(!k){ro.innerHTML+=`<div class="r-body">${STATIC_RF[rashi]}</div>`;ro.querySelector('div:has(.spinner)').remove();return;}
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:350,messages:[{role:'user',content:`Today is ${today}. Give a warm, practical Vedic Rashifal for ${rashi} rashi. Include: health tip for today, best Ayurvedic herb or food, auspicious time window, one Sanskrit phrase with meaning. Holistic, positive, 110 words max. Plain paragraphs only.`}]})});
+    const data=await res.json();
+    ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div><div class="r-body">${(data.content?.map(c=>c.text).join('')||STATIC_RF[rashi]).replace(/\n/g,'<br>')}</div>`;
+  }catch(e){ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi}</div></div></div><div class="r-body">${STATIC_RF[rashi]}</div>`;}
+}
+function renderFamRashiBoard(){
+  const el=document.getElementById('famRashiBoard');
+  const hasRashi=FAM.filter(m=>m.rashi&&m.rashi!=='');
+  if(!hasRashi.length){el.innerHTML='<p style="font-size:.82rem;color:var(--muted)">Add family members with Rashi selected in Family Setup to see their board here.</p>';return;}
+  el.innerHTML=hasRashi.map(m=>{
+    const rd=RASHIS.find(r=>m.rashi.startsWith(r.n))||RASHIS[0];
+    return `<div style="display:flex;align-items:center;gap:.85rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:1.4rem">${rd.s}</div>
+      <div style="flex:1"><div style="font-size:.85rem;font-weight:500;color:var(--earth)">${getEmoji(m.gender)} ${m.name}</div>
+      <div style="font-size:.72rem;color:var(--muted)">${m.rashi} · ${m.age} yrs · ${m.prakriti.split(' — ')[0]}</div></div>
+      <button class="btn btn-o" onclick="selRashiForMember('${rd.n}')" style="font-size:.72rem;padding:4px 10px">Read →</button>
+    </div>`;
+  }).join('');
+}
+function selRashiForMember(n){showTab('rashifal');setTimeout(()=>{document.querySelectorAll('.ritem').forEach(el=>{if(el.querySelector('.rname').textContent===n){el.click();}});},150);}
+
+/* ═══════════ AI ═══════════ */
+async function loadDashAi(){
+  const el=document.getElementById('dashAi');
+  const k=localStorage.getItem(API_KEY);
+  const ritu=getRitu(new Date().getMonth());
+  const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+  const famSum=FAM.length?FAM.map(m=>`${m.name}(${m.age}y,${m.weight}kg,${m.gender},${m.prakriti.split(' — ')[0]})`).join('; '):'No family added yet';
+  if(!k){el.innerHTML=`In ${ritu.name} season in ${LOC.city}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni (dry ginger in roti)':ritu.id==='autumn'?'Ojas building with Chyawanprash and fresh amla':'warming sesame, black pepper, and AQI lung protection with turmeric'}. Your seasonal multivitamin roti is the nutritional foundation. Add your API key in the Share tab for personalised daily AI recommendations. <a href="#" onclick="showTab('share');return false" style="color:var(--saffron)">→ Add key</a>`;return;}
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:280,messages:[{role:'user',content:`Today: ${today}. City: ${LOC.city}, ${LOC.state}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`}]})});
+    const data=await res.json();el.innerHTML=data.content?.map(c=>c.text).join('')||'Could not load insight.';
+  }catch(e){el.innerHTML=`Today in ${ritu.name}: ${ritu.principle.substring(0,120)}…`;}
+}
+
+/* ═══════════ NAV ═══════════ */
+function showTab(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('act'));
+  document.getElementById('sec-'+id).classList.add('act');
+  document.querySelectorAll('.nb').forEach(b=>{if(b.getAttribute('onclick')===`showTab('${id}')`)b.classList.add('act');});
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='seasons') showSeasonAuto();
+  if(id==='roti') calcRoti();
+}
+
+/* ═══════════ API KEY ═══════════ */
+function saveKey(){
+  const k=document.getElementById('apiIn').value.trim();
+  if(!k.startsWith('sk-ant-')){const s=document.getElementById('apiSt');s.textContent='⚠️ Key should start with sk-ant-';s.style.color='var(--pitta-r)';return;}
+  localStorage.setItem(API_KEY,k);const s=document.getElementById('apiSt');s.textContent='✅ Saved. Refreshing AI insights…';s.style.color='var(--sprout)';loadDashAi();
+}
+
+/* ═══════════ SHARE ═══════════ */
+function dlHTML(){const b=new Blob([document.documentElement.outerHTML],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ArogyaKutumb.html';a.click();}
+function copyEmbed(){navigator.clipboard.writeText('<iframe src="YOUR_GITHUB_PAGES_URL" width="100%" height="820px" frameborder="0" style="border-radius:12px"></iframe>').then(()=>alert('Embed code copied! Replace YOUR_GITHUB_PAGES_URL with your actual GitHub Pages URL.'));}
+</script>
+</body>
+</html>
