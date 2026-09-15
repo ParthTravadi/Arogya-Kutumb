@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb — आरोग्य कुटुम्ब</title>
+<title>Arogya Kutumb — आरोग्य कुटुम्ब </title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -30,8 +30,9 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--text);mi
 .mast-sub{font-size:.72rem;color:rgba(245,223,160,.55);letter-spacing:.14em;text-transform:uppercase;font-weight:500}
 
 /* LIVE CONTEXTUAL BAR */
-.ctx-bar{background:var(--bark);display:flex;flex-wrap:wrap;align-items:stretch;border-bottom:1px solid rgba(200,118,10,.2)}
-.ctx-cell{padding:.6rem 1rem;display:flex;flex-direction:column;gap:2px;border-right:1px solid rgba(200,118,10,.15);flex:1;min-width:110px}
+.ctx-bar{background:var(--bark);display:flex;flex-wrap:nowrap;align-items:stretch;border-bottom:1px solid rgba(200,118,10,.2);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ctx-bar::-webkit-scrollbar{display:none}
+.ctx-cell{padding:.6rem 1rem;display:flex;flex-direction:column;gap:2px;border-right:1px solid rgba(200,118,10,.15);flex:1;min-width:120px}
 .ctx-cell:last-child{border-right:none}
 .ctx-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,223,160,.45);font-weight:500}
 .ctx-val{font-size:.82rem;color:var(--ghee);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -226,6 +227,19 @@ input:focus,select:focus{border-color:var(--saffron)}
 .share-hero{background:linear-gradient(135deg,var(--earth),#5C3A0A);border-radius:16px;padding:2rem;text-align:center;color:white;margin-bottom:1.4rem}
 .deploy-step{background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:.85rem 1rem;font-family:monospace;font-size:.78rem;color:var(--earth);line-height:2;margin-bottom:.75rem}
 
+/* ROTI PRESET BUTTONS */
+.rpbtn{padding:.38rem .75rem;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
+  color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .12s;min-width:40px}
+.rpbtn:hover{border-color:var(--saffron);color:var(--saffron)}
+.rpbtn.active{background:var(--saffron);border-color:var(--saffron);color:white;font-weight:600}
+.spbtn{padding:.4rem .9rem;border-radius:20px;border:1.5px solid var(--border);background:var(--card);
+  color:var(--muted);font-family:inherit;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .12s}
+.spbtn:hover{border-color:var(--saffron);color:var(--saffron)}
+.spbtn.active-summer{background:var(--pitta-bg);border-color:var(--pitta-b);color:var(--pitta-r);font-weight:600}
+.spbtn.active-monsoon{background:var(--monsoon-bg);border-color:var(--monsoon-b);color:var(--monsoon-r);font-weight:600}
+.spbtn.active-autumn{background:var(--autumn-bg);border-color:var(--autumn-b);color:var(--autumn-r);font-weight:600}
+.spbtn.active-winter{background:var(--winter-bg);border-color:var(--winter-b);color:var(--winter-r);font-weight:600}
+
 /* RESPONSIVE */
 @media(max-width:620px){
   .g2,.g3,.g4,.formula-wrap,.frow,.dos-grid{grid-template-columns:1fr}
@@ -250,12 +264,26 @@ input:focus,select:focus{border-color:var(--saffron)}
 
 <!-- CONTEXTUAL BAR -->
 <div class="ctx-bar" id="ctxBar">
-  <div class="ctx-cell"><div class="ctx-label"><span class="live-dot"></span>Live</div><div class="ctx-val" id="ctxTime">—</div></div>
-  <div class="ctx-cell"><div class="ctx-label">📍 Location</div><div class="ctx-val" id="ctxCity">Ahmedabad, Gujarat</div></div>
-  <div class="ctx-cell"><div class="ctx-label">🌿 Ritu</div><div class="ctx-val" id="ctxRitu">—</div></div>
-  <div class="ctx-cell"><div class="ctx-label">⭐ Nakshatra</div><div class="ctx-val" id="ctxNak">—</div></div>
-  <div class="ctx-cell"><div class="ctx-label">💨 AQI</div><div class="ctx-val" id="ctxAqi">—</div></div>
-  <div class="ctx-cell"><div class="ctx-label">👪 Family</div><div class="ctx-val" id="ctxFam">0 members</div></div>
+  <div class="ctx-cell">
+    <div class="ctx-label"><span class="live-dot"></span>Live</div>
+    <div class="ctx-val" id="ctxTime">—</div>
+  </div>
+  <div class="ctx-cell">
+    <div class="ctx-label"><span class="live-dot"></span>Live Location</div>
+    <div class="ctx-val" id="ctxCity">Detecting…</div>
+  </div>
+  <div class="ctx-cell">
+    <div class="ctx-label">🌿 Ritu</div>
+    <div class="ctx-val" id="ctxRitu">—</div>
+  </div>
+  <div class="ctx-cell">
+    <div class="ctx-label">💨 AQI</div>
+    <div class="ctx-val" id="ctxAqi">—</div>
+  </div>
+  <div class="ctx-cell">
+    <div class="ctx-label">👪 Family</div>
+    <div class="ctx-val" id="ctxFam" style="cursor:pointer" onclick="showTab('family')">Add members →</div>
+  </div>
 </div>
 
 <!-- QUOTE -->
@@ -298,7 +326,6 @@ input:focus,select:focus{border-color:var(--saffron)}
       <div style="text-align:center;padding:1.25rem;border:2px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;cursor:pointer" onclick="showTab('family')">➕ Add family members in Family Setup</div>
     </div>
   </div>
-
   <div class="ai-box">
     <div class="ai-hdr"><span class="ai-badge">AI</span><span class="ai-title">Today's personalised holistic recommendation</span></div>
     <div class="ai-body" id="dashAi"><span class="spinner"></span> Loading…</div>
@@ -316,9 +343,14 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="card" style="margin-bottom:1rem">
     <div class="ct">📍 Location & Environment</div>
     <div class="g3">
-      <div class="fg"><label>City</label><input id="inCity" value="Ahmedabad" oninput="saveLoc()"></div>
+      <div class="fg"><label>City / Location <span id="geoStatus" style="font-size:.65rem;color:var(--sprout);font-weight:400;margin-left:.35rem"></span></label>
+      <div style="display:flex;gap:.5rem">
+        <input id="inCity" value="Ahmedabad" oninput="saveLoc()" style="flex:1">
+        <button class="btn btn-g" onclick="autoDetectLocation(false)" style="white-space:nowrap;font-size:.72rem;padding:.4rem .85rem" title="Get live GPS location + live AQI">📍 Live detect</button>
+      </div>
+    </div>
       <div class="fg"><label>State</label><input id="inState" value="Gujarat" oninput="saveLoc()"></div>
-      <div class="fg"><label>Current AQI <span style="font-size:.65rem;font-weight:400;text-transform:none">(0–500)</span></label><input id="inAqi" type="number" placeholder="e.g. 85" oninput="saveLoc()"></div>
+      <div class="fg"><label>AQI <span style="font-size:.65rem;font-weight:400;text-transform:none">(auto-fetched or enter manually)</span></label><input id="inAqi" type="number" placeholder="Auto-fetched on detect" oninput="saveLoc()"></div>
     </div>
     <div id="aqiGuide" style="font-size:.75rem;color:var(--muted);margin-top:.3rem">
       AQI guide: <span class="aqi-g">0–50 Good</span> · <span class="aqi-m">51–100 Moderate</span> · <span style="color:#E05A5A">101–150 Unhealthy for sensitive</span> · <span style="color:var(--pitta-r)">151+ Unhealthy</span>
@@ -389,22 +421,54 @@ input:focus,select:focus{border-color:var(--saffron)}
 <div class="sec" id="sec-roti">
   <div class="card" style="margin-bottom:1rem">
     <div class="ct">🫓 Family Multivitamin Roti Calculator</div>
-    <div class="g2" style="margin-bottom:.85rem">
-      <div class="fg" style="margin:0"><label>Number of rotis to prepare</label>
-        <input id="rCount" type="number" value="12" min="4" max="60" step="4" oninput="calcRoti()"></div>
-      <div class="fg" style="margin:0"><label>Season</label>
-        <select id="rSeason" onchange="calcRoti()">
-          <option value="summer">☀️ Grishma (Summer) Mar–Jun</option>
-          <option value="monsoon">🌧️ Varsha (Monsoon) Jul–Sep</option>
-          <option value="autumn" selected>🍂 Sharad (Autumn) Oct–Nov</option>
-          <option value="winter">❄️ Hemant (Winter) Dec–Feb</option>
-        </select>
+
+    <!-- ROW 1: Roti count presets -->
+    <div style="margin-bottom:1rem">
+      <label style="font-size:.72rem;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:.5rem">How many rotis to prepare?</label>
+      <div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.6rem" id="rotiPresets">
+        <button class="rpbtn" onclick="setRoti(8)">8</button>
+        <button class="rpbtn" onclick="setRoti(10)">10</button>
+        <button class="rpbtn active" onclick="setRoti(12)">12</button>
+        <button class="rpbtn" onclick="setRoti(16)">16</button>
+        <button class="rpbtn" onclick="setRoti(20)">20</button>
+        <button class="rpbtn" onclick="setRoti(24)">24</button>
+        <button class="rpbtn" onclick="setRoti(30)">30</button>
+        <button class="rpbtn" onclick="setRoti(36)">36</button>
+        <button class="rpbtn" onclick="setRoti(40)">40</button>
+        <button class="rpbtn" onclick="setRoti(48)">48</button>
+        <button class="rpbtn" onclick="setRoti(60)">60</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+        <span style="font-size:.75rem;color:var(--muted)">Custom:</span>
+        <input id="rCountCustom" type="number" min="1" max="200" placeholder="e.g. 25"
+          style="width:90px;padding:.4rem .7rem;font-size:.85rem;font-family:inherit;border:1.5px solid var(--border);border-radius:8px;background:var(--cream);color:var(--text)"
+          oninput="setRotiCustom(this.value)">
+        <span id="rCountDisplay" style="font-size:.85rem;font-weight:600;color:var(--saffron)">12 rotis selected</span>
       </div>
     </div>
+    <input type="hidden" id="rCount" value="12">
+
+    <!-- ROW 2: Season auto or manual -->
+    <div style="margin-bottom:1rem">
+      <label style="font-size:.72rem;font-weight:500;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:.5rem">Season formula</label>
+      <div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.5rem" id="seasonPresets">
+        <button class="spbtn" data-s="summer" onclick="setSeason('summer',this)">☀️ Grishma (Mar–Jun)</button>
+        <button class="spbtn" data-s="monsoon" onclick="setSeason('monsoon',this)">🌧️ Varsha (Jul–Sep)</button>
+        <button class="spbtn" data-s="autumn" onclick="setSeason('autumn',this)">🍂 Sharad (Oct–Nov)</button>
+        <button class="spbtn" data-s="winter" onclick="setSeason('winter',this)">❄️ Hemant (Dec–Feb)</button>
+      </div>
+      <div id="seasonAutoNote" style="font-size:.72rem;color:var(--sprout);display:flex;align-items:center;gap:.35rem">
+        <span class="live-dot"></span><span id="seasonAutoText">Auto-selected from current month</span>
+      </div>
+    </div>
+    <input type="hidden" id="rSeason" value="autumn">
+
     <div id="rotiOut"></div>
   </div>
   <div class="card">
-    <div class="ct">📊 Per-person nutrition at lunch (based on each person's 3-roti serving)</div>
+    <div class="ct">📊 Per-person nutrition — set rotis per meal</div>
+    <p style="font-size:.8rem;color:var(--muted);margin-bottom:.85rem">Set how many rotis each person eats per meal below. Nutrition scales exactly — no assumptions.</p>
+    <div id="ppMealSetup" style="margin-bottom:1rem"></div>
     <div id="ppTable"><p style="font-size:.82rem;color:var(--muted)">Add family members to see personalised breakdown.</p></div>
   </div>
 </div>
@@ -573,15 +637,20 @@ const API_KEY = 'ak2_key';
 
 /* ═══════════ BOOT ═══════════ */
 window.onload = ()=>{
-  // Restore location inputs
-  document.getElementById('inCity').value = LOC.city||'Ahmedabad';
-  document.getElementById('inState').value = LOC.state||'Gujarat';
-  document.getElementById('inAqi').value = LOC.aqi||'';
+  // Restore saved location if available, else auto-detect
+  if(LOC.city){
+    document.getElementById('inCity').value = LOC.city;
+    document.getElementById('inState').value = LOC.state||'';
+    document.getElementById('inAqi').value = LOC.aqi||'';
+  } else {
+    // First visit — silently auto-detect
+    autoDetectLocation(true);
+  }
   const k = localStorage.getItem(API_KEY);
   if(k) document.getElementById('apiIn').value = k;
 
   tick(); setInterval(tick, 30000);
-  renderFam(); calcRoti(); renderTracker(); renderMantra(); renderRashiGrid();
+  renderFam(); autoSetSeason(); calcRoti(); renderTracker(); renderMantra(); renderRashiGrid();
   showSeasonAuto(); loadDashAi();
   const st = document.getElementById('apiSt');
   if(k){st.textContent='✅ API key active';st.style.color='var(--sprout)'}
@@ -591,30 +660,52 @@ window.onload = ()=>{
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const NAKS=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishtha','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+/* getMoonNakshatra removed — not displayed */
 
 function tick(){
   const n = new Date();
-  const nak = NAKS[Math.floor(n.getTime()/86400000+7)%27];
   const ritu = getRitu(n.getMonth());
   const aqi = LOC.aqi||'—';
   const aqiCls = !LOC.aqi?'':LOC.aqi<51?'aqi-g':LOC.aqi<101?'aqi-m':'aqi-b';
 
   setText('ctxTime',`${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS_S[n.getMonth()]} · ${n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`);
-  setText('ctxCity',`${LOC.city}, ${LOC.state}`);
+  // Only update city from LOC if geolocation already resolved it
+  const cityEl = document.getElementById('ctxCity');
+  if(cityEl && !cityEl.textContent.includes('Detecting') && LOC.city){
+    cityEl.textContent = `${LOC.city}${LOC.state?', '+LOC.state:''}`;
+  }
   setText('ctxRitu', ritu.name);
-  setText('ctxNak', nak);
   const aqiEl = document.getElementById('ctxAqi');
-  aqiEl.textContent = aqi; aqiEl.className = 'ctx-val '+aqiCls;
-  setText('ctxFam', `${FAM.length} member${FAM.length!==1?'s':''}`);
+  if(aqiEl){
+    aqiEl.textContent  = LOC.aqi ? String(LOC.aqi) : 'Add in Setup';
+    aqiEl.className    = 'ctx-val ' + (LOC.aqi ? aqiCls : '');
+    aqiEl.style.opacity= LOC.aqi ? '1' : '0.5';
+    aqiEl.style.cursor = LOC.aqi ? 'default' : 'pointer';
+    if(!LOC.aqi) aqiEl.onclick = ()=>showTab('family');
+  }
+  const famEl = document.getElementById('ctxFam');
+  if(famEl){
+    if(FAM.length){
+      famEl.textContent  = `${FAM.length} member${FAM.length!==1?'s':''}`;
+      famEl.style.opacity= '1';
+      famEl.onclick      = null;
+    } else {
+      famEl.textContent  = 'Add members →';
+      famEl.style.opacity= '0.6';
+      famEl.onclick      = ()=>showTab('family');
+    }
+  }
 
   setText('ds-fam', FAM.length);
   setText('ds-ritu', ritu.icon);
   const aqiStat = document.getElementById('ds-aqi');
-  aqiStat.textContent = aqi; aqiStat.className = 'dstat-val '+aqiCls;
+  if(aqiStat){
+    aqiStat.textContent = LOC.aqi ? String(LOC.aqi) : '—';
+    aqiStat.className   = 'dstat-val ' + (LOC.aqi ? aqiCls : '');
+  }
 
   updateQuote(n);
-  renderRituDash(ritu, nak, n);
+  renderRituDash(ritu, n);
   renderDashFamGrid();
   document.getElementById('hDateLbl').textContent = `${DAYS[n.getDay()]}, ${n.getDate()} ${MONTHS_S[n.getMonth()]}`;
 }
@@ -683,7 +774,7 @@ function getRitu(month){
   return RITU_DATA.winter;
 }
 
-function renderRituDash(r, nak, n){
+function renderRituDash(r, n){
   document.getElementById('rituDashName').textContent = r.name;
   const card = document.getElementById('rituDashCard');
   card.style.background = r.hBg;
@@ -695,7 +786,7 @@ function renderRituDash(r, nak, n){
     </div>
     <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:${r.hColor};margin-bottom:.5rem">"${r.tagline}"</div>
     <div style="font-size:.82rem;color:${r.hColor};line-height:1.6;opacity:.9">${r.principle}</div>
-    <div style="margin-top:.85rem;font-size:.78rem;color:${r.hColor};opacity:.7">⭐ Today's Nakshatra: ${nak} &nbsp;·&nbsp; ${r.period} &nbsp;·&nbsp; ${r.temp}</div>`;
+    <div style="margin-top:.85rem;font-size:.78rem;color:${r.hColor};opacity:.7">${r.period} · ${r.temp}</div>`;
 }
 
 function showSeasonAuto(){
@@ -758,11 +849,103 @@ function renderSeason(id){
 }
 
 /* ═══════════ LOCATION ═══════════ */
+async function autoDetectLocation(silent=false){
+  const st = document.getElementById('geoStatus');
+  if(!navigator.geolocation){
+    if(!silent) st.textContent='GPS not supported in this browser';
+    setText('ctxCity', LOC.city ? `${LOC.city}, ${LOC.state}` : 'Location unavailable');
+    return;
+  }
+  if(!silent) st.textContent='📍 Detecting…';
+  setText('ctxCity','Detecting location…');
+
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const {latitude: lat, longitude: lon} = pos.coords;
+      try {
+        // 1. Reverse geocode — free, no API key
+        const geoRes = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+          {headers:{'Accept-Language':'en'}}
+        );
+        const geo = await geoRes.json();
+        const city  = geo.address.city || geo.address.town || geo.address.village ||
+                      geo.address.county || geo.address.suburb || 'Your location';
+        const state = geo.address.state || '';
+        const country = geo.address.country_code?.toUpperCase() || '';
+
+        // 2. Live AQI from Open-Meteo (free, no key, uses PM2.5 → AQI approx)
+        let aqiVal = LOC.aqi || '';
+        try {
+          const aqiRes = await fetch(
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,european_aqi`
+          );
+          const aqiData = await aqiRes.json();
+          if(aqiData.current?.european_aqi != null){
+            // Convert EU AQI (0-500) — use directly as proxy for US AQI display
+            aqiVal = Math.round(aqiData.current.european_aqi);
+          }
+        } catch(e){ /* AQI fetch failed — keep manual value */ }
+
+        // Update state
+        LOC.city  = city;
+        LOC.state = state;
+        LOC.lat   = lat;
+        LOC.lon   = lon;
+        if(aqiVal !== '') LOC.aqi = aqiVal;
+        localStorage.setItem('ak2_loc', JSON.stringify(LOC));
+
+        // Update inputs
+        document.getElementById('inCity').value  = city;
+        document.getElementById('inState').value = state;
+        if(aqiVal !== '') document.getElementById('inAqi').value = aqiVal;
+
+        // Update ctx bar
+        const displayCity = state ? `${city}, ${state}` : `${city}, ${country}`;
+        setText('ctxCity', displayCity);
+
+        // Update AQI display
+        const aqiEl = document.getElementById('ctxAqi');
+        if(aqiEl && aqiVal !== ''){
+          aqiEl.textContent = aqiVal;
+          aqiEl.className   = 'ctx-val ' + (aqiVal<51?'aqi-g':aqiVal<101?'aqi-m':'aqi-b');
+          document.getElementById('ds-aqi').textContent = aqiVal;
+          document.getElementById('ds-aqi').className   = 'dstat-val ' + (aqiVal<51?'aqi-g':aqiVal<101?'aqi-m':'aqi-b');
+        }
+
+        if(!silent) st.textContent = `✅ ${displayCity}${aqiVal!==''?' · AQI '+aqiVal:''}`;
+
+        // Refresh AI insight with real location
+        loadDashAi();
+
+      } catch(err) {
+        if(!silent) st.textContent = 'Could not resolve location';
+        setText('ctxCity', LOC.city ? `${LOC.city}, ${LOC.state}` : 'Location error');
+      }
+    },
+    err => {
+      // Permission denied or timeout
+      const msg = err.code===1 ? 'Location permission denied' :
+                  err.code===2 ? 'Location unavailable'       : 'Location timeout';
+      if(!silent) st.textContent = msg;
+      // Fall back to saved location or show prompt
+      if(LOC.city){
+        setText('ctxCity', `${LOC.city}, ${LOC.state} (saved)`);
+      } else {
+        setText('ctxCity', 'Allow location access →');
+      }
+    },
+    {timeout:10000, maximumAge:300000, enableHighAccuracy:false}
+  );
+}
+
 function saveLoc(){
-  LOC.city = document.getElementById('inCity').value||'Ahmedabad';
-  LOC.state = document.getElementById('inState').value||'Gujarat';
-  LOC.aqi = document.getElementById('inAqi').value||'';
+  LOC.city  = document.getElementById('inCity').value  || '';
+  LOC.state = document.getElementById('inState').value || '';
+  LOC.aqi   = document.getElementById('inAqi').value   || '';
   localStorage.setItem('ak2_loc', JSON.stringify(LOC));
+  // Update ctx bar immediately
+  if(LOC.city) setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
   tick();
 }
 
@@ -846,31 +1029,98 @@ const HERBS_S = {
 };
 const NUTR3 = {summer:{p:22.1,f:9.4,i:6.1},monsoon:{p:21.3,f:8.8,i:5.9},autumn:{p:22.5,f:9.6,i:6.3},winter:{p:23.2,f:9.1,i:6.8}};
 
+/* ── Nutrient base per 1 roti (derived from 3-roti values / 3) ── */
+const NUTR1 = {
+  summer: {p:22.1/3, f:9.4/3,  i:6.1/3,  o:920/3,  c:95/3,  z:1.8/3},
+  monsoon:{p:21.3/3, f:8.8/3,  i:5.9/3,  o:920/3,  c:95/3,  z:1.8/3},
+  autumn: {p:22.5/3, f:9.6/3,  i:6.3/3,  o:920/3,  c:95/3,  z:1.8/3},
+  winter: {p:23.2/3, f:9.1/3,  i:6.8/3,  o:920/3,  c:95/3,  z:1.8/3},
+};
+
+function setRoti(n){
+  document.getElementById('rCount').value = n;
+  document.getElementById('rCountDisplay').textContent = n + ' rotis selected';
+  document.getElementById('rCountCustom').value = '';
+  document.querySelectorAll('.rpbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.rpbtn').forEach(b=>{ if(b.textContent==n) b.classList.add('active'); });
+  calcRoti();
+}
+
+function setRotiCustom(val){
+  const n = parseInt(val);
+  if(!n || n<1) return;
+  document.getElementById('rCount').value = n;
+  document.getElementById('rCountDisplay').textContent = n + ' rotis selected';
+  document.querySelectorAll('.rpbtn').forEach(b=>b.classList.remove('active'));
+  calcRoti();
+}
+
+function setSeason(s, el){
+  document.getElementById('rSeason').value = s;
+  document.querySelectorAll('.spbtn').forEach(b=>{ b.className='spbtn'; });
+  el.className = `spbtn active-${s}`;
+  document.getElementById('seasonAutoText').textContent = 'Manually selected';
+  document.getElementById('seasonAutoNote').style.color = 'var(--saffron)';
+  calcRoti();
+}
+
+function autoSetSeason(){
+  const m = new Date().getMonth(); // 0-11
+  const s = m>=2&&m<=5?'summer': m>=6&&m<=8?'monsoon': m>=9&&m<=10?'autumn':'winter';
+  const SEASON_NAMES = {summer:'Grishma (Summer)',monsoon:'Varsha (Monsoon)',autumn:'Sharad (Autumn)',winter:'Hemant (Winter)'};
+  document.getElementById('rSeason').value = s;
+  document.querySelectorAll('.spbtn').forEach(b=>{ b.className='spbtn'; if(b.dataset.s===s) b.className=`spbtn active-${s}`; });
+  document.getElementById('seasonAutoText').textContent =
+    `Auto-selected: ${SEASON_NAMES[s]} (based on current month)`;
+  document.getElementById('seasonAutoNote').style.color = 'var(--sprout)';
+  return s;
+}
+
 function calcRoti(){
-  const n = parseInt(document.getElementById('rCount').value)||12;
-  const s = document.getElementById('rSeason').value;
-  const sc = n/12;
-  const d = RITU_DATA[s];
-  let rows='',total=0;
+  const n   = parseInt(document.getElementById('rCount').value) || 12;
+  const s   = document.getElementById('rSeason').value || autoSetSeason();
+  const sc  = n / 12;   /* scale factor relative to base recipe of 12 rotis */
+  const d   = RITU_DATA[s];
+  const nt1 = NUTR1[s]; /* per-roti nutrients */
+
+  /* ── Flour table (linearly scaled) ── */
+  let rows='', total=0;
   for(const[k,v] of Object.entries(RF[s])){
-    const scaled=Math.round(v*sc);total+=scaled;
-    rows+=`<tr><td class="flour-name">${k}</td><td class="flour-g">${scaled}g</td></tr>`;
+    const scaled = Math.round(v * sc);
+    total += scaled;
+    rows += `<tr><td class="flour-name">${k}</td><td class="flour-g">${scaled}g</td></tr>`;
   }
-  rows+=`<tr><td style="font-weight:600;font-size:.85rem">Total flour</td><td style="font-weight:700;color:var(--leaf)">${total}g</td></tr>`;
-  const milk=Math.round(n*17); const ghee=(n*.2).toFixed(1);
-  const nt = NUTR3[s];
+  rows += `<tr><td style="font-weight:600;font-size:.85rem">Total flour</td>
+            <td style="font-weight:700;color:var(--leaf)">${total}g</td></tr>`;
+
+  const milk = Math.round(n * 17);
+  const ghee = (n * 0.2).toFixed(1);
+
+  /* ── Batch-total nutrients (scaled to n rotis) ── */
+  const bP = (nt1.p * n).toFixed(1);
+  const bF = (nt1.f * n).toFixed(1);
+  const bI = (nt1.i * n).toFixed(1);
+  const bO = Math.round(nt1.o * n);
+  const bC = Math.round(nt1.c * n);
+
+  /* ── Per-roti nutrients ── */
+  const prP = nt1.p.toFixed(1);
+  const prF = nt1.f.toFixed(1);
+  const prI = nt1.i.toFixed(2);
+
   document.getElementById('rotiOut').innerHTML = `
     <div style="background:${d.hBg};border:1px solid ${d.hBorder};border-radius:10px;padding:.85rem;margin-bottom:.85rem">
-      <div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:${d.hColor};font-weight:600;margin-bottom:.3rem">${d.icon} ${d.name} Formula</div>
+      <div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:${d.hColor};font-weight:600;margin-bottom:.3rem">${d.icon} ${d.name} · ${n} rotis</div>
       <div style="font-size:.8rem;color:${d.hColor};opacity:.85">${d.tagline}</div>
     </div>
+
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.85rem">
       <div>
-        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Flour blend</div>
+        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Flour blend — ${n} rotis</div>
         <table class="flour-table">${rows}</table>
       </div>
       <div>
-        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Wet ingredients</div>
+        <div style="font-size:.75rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Wet ingredients — ${n} rotis</div>
         <table class="flour-table">
           <tr><td>A2 milk (boiling hot)</td><td>${milk}–${milk+20}ml</td></tr>
           <tr><td>Ghee in dough</td><td>${ghee} tbsp</td></tr>
@@ -882,37 +1132,136 @@ function calcRoti(){
         </div>
       </div>
     </div>
-    <div class="nutr-boxes">
-      <div class="nbox"><div class="nval">${nt.p}g</div><div class="nlbl">Protein / 3 rotis</div></div>
-      <div class="nbox"><div class="nval">${nt.f}g</div><div class="nlbl">Fiber / 3 rotis</div></div>
-      <div class="nbox"><div class="nval">${nt.i}mg</div><div class="nlbl">Iron / 3 rotis</div></div>
-      <div class="nbox"><div class="nval">920mg</div><div class="nlbl">Omega-3 ALA</div></div>
+
+    <!-- Batch totals -->
+    <div style="background:var(--mist);border:1px solid var(--autumn-b);border-radius:10px;padding:.85rem;margin-bottom:.85rem">
+      <div style="font-size:.72rem;color:var(--leaf);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">
+        📦 Full batch nutrition — all ${n} rotis combined
+      </div>
+      <div class="nutr-boxes">
+        <div class="nbox"><div class="nval">${bP}g</div><div class="nlbl">Total Protein</div></div>
+        <div class="nbox"><div class="nval">${bF}g</div><div class="nlbl">Total Fiber</div></div>
+        <div class="nbox"><div class="nval">${bI}mg</div><div class="nlbl">Total Iron</div></div>
+        <div class="nbox"><div class="nval">${bO}mg</div><div class="nlbl">Total Omega-3</div></div>
+      </div>
+    </div>
+
+    <!-- Per-roti reference -->
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:.85rem;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;align-items:center">
+      <div style="font-size:.72rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em">Per 1 roti:</div>
+      <span style="font-size:.82rem;color:var(--earth)"><b>${prP}g</b> protein</span>
+      <span style="font-size:.82rem;color:var(--earth)"><b>${prF}g</b> fiber</span>
+      <span style="font-size:.82rem;color:var(--earth)"><b>${prI}mg</b> iron</span>
+      <span style="font-size:.82rem;color:var(--earth)"><b>${Math.round(nt1.o)}mg</b> Omega-3</span>
+      <span style="font-size:.82rem;color:var(--earth)"><b>${Math.round(nt1.c)}mg</b> curcumin</span>
     </div>`;
-  renderPPTable(s);
+
+  renderPPTable(s, n, nt1);
 }
 
-function renderPPTable(s){
-  const el=document.getElementById('ppTable');
-  if(!FAM.length){el.innerHTML='<p style="font-size:.82rem;color:var(--muted)">Add family members to see personalised breakdown.</p>';return;}
-  const nt=NUTR3[s];
-  let h=`<table class="pp-table"><thead><tr><th>Member</th><th>Gender</th><th>Weight</th><th>Rotis</th><th>Protein</th><th>Fiber</th><th>Iron</th><th>% Daily protein</th></tr></thead><tbody>`;
-  FAM.forEach(m=>{
-    const r=rotisFor(m); const f=r/3;
-    const pTgt=m.gender==='male'?Math.round(m.weight*1.5):m.gender==='child'?Math.round(m.weight*.9):Math.round(m.weight*1.2);
-    const pGot=(nt.p*f).toFixed(1); const pPct=Math.min(100,Math.round((pGot/pTgt)*100));
+/* Per-meal roti settings: {memberName: {breakfast:n, lunch:n, dinner:n}} */
+let MEAL_ROTIS = JSON.parse(localStorage.getItem('ak2_meal_rotis')||'{}');
+
+function renderPPTable(s, batchN, nt1){
+  const el    = document.getElementById('ppTable');
+  const setup = document.getElementById('ppMealSetup');
+  if(!FAM.length){
+    el.innerHTML = '<p style="font-size:.82rem;color:var(--muted)">Add family members to see personalised breakdown.</p>';
+    if(setup) setup.innerHTML='';
+    return;
+  }
+  if(!nt1) nt1 = NUTR1[s || document.getElementById('rSeason').value || 'autumn'];
+
+  /* ── Meal input sliders ── */
+  if(setup){
+    setup.innerHTML = FAM.map(m => {
+      if(!MEAL_ROTIS[m.name]) MEAL_ROTIS[m.name] = {
+        breakfast: m.gender==='child'?1:1,
+        lunch:     m.gender==='child'?2:m.gender==='male'?4:3,
+        dinner:    m.gender==='child'?1:m.gender==='male'?3:2
+      };
+      const mr = MEAL_ROTIS[m.name];
+      return `<div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.85rem;margin-bottom:.6rem">
+        <div style="font-weight:500;font-size:.88rem;color:var(--earth);margin-bottom:.6rem">${getEmoji(m.gender)} ${m.name} — ${m.weight}kg ${m.gender}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center">
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;width:65px">Breakfast</span>
+            <button onclick="adjMeal('${m.name}','breakfast',-1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
+            <span id="mr_${m.name}_breakfast" style="font-size:.9rem;font-weight:600;color:var(--saffron);min-width:20px;text-align:center">${mr.breakfast}</span>
+            <button onclick="adjMeal('${m.name}','breakfast',1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;width:65px">Lunch</span>
+            <button onclick="adjMeal('${m.name}','lunch',-1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
+            <span id="mr_${m.name}_lunch" style="font-size:.9rem;font-weight:600;color:var(--saffron);min-width:20px;text-align:center">${mr.lunch}</span>
+            <button onclick="adjMeal('${m.name}','lunch',1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;width:65px">Dinner</span>
+            <button onclick="adjMeal('${m.name}','dinner',-1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
+            <span id="mr_${m.name}_dinner" style="font-size:.9rem;font-weight:600;color:var(--saffron);min-width:20px;text-align:center">${mr.dinner}</span>
+            <button onclick="adjMeal('${m.name}','dinner',1,this)" style="width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.9rem;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
+          </div>
+          <div style="font-size:.78rem;color:var(--sprout);font-weight:500" id="mr_${m.name}_total">
+            Daily: ${mr.breakfast+mr.lunch+mr.dinner} rotis
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── Nutrition table ── */
+  let h=`<table class="pp-table"><thead><tr>
+    <th>Member</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th>
+    <th>Daily total</th><th>Daily Protein</th><th>Daily Fiber</th><th>Daily Iron</th><th>% Protein RDA</th>
+  </tr></thead><tbody>`;
+
+  FAM.forEach(m => {
+    const mr   = MEAL_ROTIS[m.name] || {breakfast:1,lunch:3,dinner:2};
+    const tot  = mr.breakfast + mr.lunch + mr.dinner;
+    const pDay = (nt1.p * tot).toFixed(1);
+    const fDay = (nt1.f * tot).toFixed(1);
+    const iDay = (nt1.i * tot).toFixed(1);
+    const pTgt = m.gender==='male'?Math.round(m.weight*1.5):m.gender==='child'?Math.round(m.weight*.9):Math.round(m.weight*1.2);
+    const pPct = Math.min(100, Math.round((pDay/pTgt)*100));
     h+=`<tr>
-      <td><strong>${getEmoji(m.gender)} ${m.name}</strong></td>
-      <td style="color:var(--muted)">${m.gender}</td>
-      <td>${m.weight} kg</td>
-      <td style="color:var(--saffron);font-weight:600">${r}</td>
-      <td>${pGot}g</td>
-      <td>${(nt.f*f).toFixed(1)}g</td>
-      <td>${(nt.i*f).toFixed(1)}mg</td>
-      <td>${pPct}%<div class="progress"><div class="pbar" style="width:${pPct}%"></div></div></td>
+      <td><strong>${getEmoji(m.gender)} ${m.name}</strong><br><span style="font-size:.7rem;color:var(--muted)">${m.weight}kg · ${m.gender}</span></td>
+      <td style="text-align:center;color:var(--saffron);font-weight:600">${mr.breakfast}</td>
+      <td style="text-align:center;color:var(--saffron);font-weight:600">${mr.lunch}</td>
+      <td style="text-align:center;color:var(--saffron);font-weight:600">${mr.dinner}</td>
+      <td style="text-align:center;font-weight:700;color:var(--leaf)">${tot}</td>
+      <td>${pDay}g</td>
+      <td>${fDay}g</td>
+      <td>${iDay}mg</td>
+      <td>${pPct}%<div class="progress"><div class="pbar" style="width:${pPct}%"></div></div>
+        <div style="font-size:.68rem;color:var(--muted)">of ${pTgt}g RDA</div></td>
     </tr>`;
   });
-  h+=`</tbody></table>`;
-  el.innerHTML=h;
+  h+=`</tbody></table>
+  <div style="font-size:.72rem;color:var(--muted);margin-top:.6rem;font-style:italic">
+    Adjust + / − above to set rotis per meal per person. Nutrition updates live.
+  </div>`;
+  el.innerHTML = h;
+}
+
+function adjMeal(name, meal, delta, btn){
+  if(!MEAL_ROTIS[name]) MEAL_ROTIS[name]={breakfast:1,lunch:3,dinner:2};
+  const cur = MEAL_ROTIS[name][meal];
+  const nv  = Math.max(0, Math.min(15, cur+delta));
+  MEAL_ROTIS[name][meal] = nv;
+  localStorage.setItem('ak2_meal_rotis', JSON.stringify(MEAL_ROTIS));
+  const countEl = document.getElementById(`mr_${name}_${meal}`);
+  if(countEl) countEl.textContent = nv;
+  const totEl = document.getElementById(`mr_${name}_total`);
+  const mr = MEAL_ROTIS[name];
+  if(totEl) totEl.textContent = `Daily: ${mr.breakfast+mr.lunch+mr.dinner} rotis`;
+  // Re-render table section only
+  const s = document.getElementById('rSeason').value;
+  const nt1 = NUTR1[s];
+  const el = document.getElementById('ppTable');
+  if(!el) return;
+  // Update just the table by re-calling full render (cheap, no flicker)
+  renderPPTable(s, null, nt1);
 }
 
 /* ═══════════ QUOTES ═══════════ */
@@ -925,7 +1274,13 @@ const QS=[
   {s:'नास्ति तेजः समं तपः',m:'There is no austerity equal to the discipline of proper eating. — Mahabharata'},
   {s:'ओजः प्राणस्य मूलं च',m:'Ojas (vital essence) is the very root of life-force. Protect it daily. — Charaka'},
 ];
-function updateQuote(d){const q=QS[d.getDay()%QS.length];document.getElementById('qSkt').textContent=q.s;document.getElementById('qMean').textContent=`"${q.m}"`;}
+function updateQuote(d){
+  // Use day-of-year so quote changes daily and doesn't repeat weekly
+  const start=new Date(d.getFullYear(),0,0);
+  const dayOfYear=Math.floor((d-start)/(1000*60*60*24));
+  const q=QS[dayOfYear%QS.length];
+  document.getElementById('qSkt').textContent=q.s;
+  document.getElementById('qMean').textContent=`"${q.m}"`;}
 
 /* ═══════════ HABITS ═══════════ */
 const HMASTER=[
@@ -1067,7 +1422,14 @@ async function loadRashifal(rashi){
   const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div><div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> Consulting the stars…</div>`;
   const k=localStorage.getItem(API_KEY);
-  if(!k){ro.innerHTML+=`<div class="r-body">${STATIC_RF[rashi]}</div>`;ro.querySelector('div:has(.spinner)').remove();return;}
+  if(!k){
+    ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div>
+    <div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.6rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.65rem">
+      ⚠️ <b>Static reading</b> — Add your Anthropic API key in the <b>Share</b> tab for a live AI-powered daily reading personalised to date &amp; stars.
+    </div>
+    <div class="r-body">${STATIC_RF[rashi]}</div>`;
+    return;
+  }
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:350,messages:[{role:'user',content:`Today is ${today}. Give a warm, practical Vedic Rashifal for ${rashi} rashi. Include: health tip for today, best Ayurvedic herb or food, auspicious time window, one Sanskrit phrase with meaning. Holistic, positive, 110 words max. Plain paragraphs only.`}]})});
     const data=await res.json();
@@ -1097,7 +1459,14 @@ async function loadDashAi(){
   const ritu=getRitu(new Date().getMonth());
   const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
   const famSum=FAM.length?FAM.map(m=>`${m.name}(${m.age}y,${m.weight}kg,${m.gender},${m.prakriti.split(' — ')[0]})`).join('; '):'No family added yet';
-  if(!k){el.innerHTML=`In ${ritu.name} season in ${LOC.city}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni (dry ginger in roti)':ritu.id==='autumn'?'Ojas building with Chyawanprash and fresh amla':'warming sesame, black pepper, and AQI lung protection with turmeric'}. Your seasonal multivitamin roti is the nutritional foundation. Add your API key in the Share tab for personalised daily AI recommendations. <a href="#" onclick="showTab('share');return false" style="color:var(--saffron)">→ Add key</a>`;return;}
+  if(!k){
+    el.innerHTML=`<div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.5rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.5rem">
+      ⚠️ <b>Static tip</b> — Add your Anthropic API key in the <b>Share</b> tab for live daily AI recommendations personalised to your family.
+    </div>
+    <span style="color:var(--text)">In <b>${ritu.name}</b> season in ${LOC.city}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration — your roti already has Jowar and Coconut powder doing the heavy lifting':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni — the saunth and ajwain in your monsoon roti are the fix':ritu.id==='autumn'?'Ojas building — Chyawanprash every morning and 2 fresh amla daily alongside your roti':'warming sesame and black pepper for Kapha, turmeric increased to ¾ tsp for AQI 150–200 lung protection'}.</span>
+    <a href="#" onclick="showTab('share');return false" style="color:var(--saffron);margin-left:.4rem;font-size:.78rem">→ Add API key</a>`;
+    return;
+  }
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:280,messages:[{role:'user',content:`Today: ${today}. City: ${LOC.city}, ${LOC.state}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`}]})});
     const data=await res.json();el.innerHTML=data.content?.map(c=>c.text).join('')||'Could not load insight.';
@@ -1112,7 +1481,7 @@ function showTab(id){
   document.querySelectorAll('.nb').forEach(b=>{if(b.getAttribute('onclick')===`showTab('${id}')`)b.classList.add('act');});
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='seasons') showSeasonAuto();
-  if(id==='roti') calcRoti();
+  if(id==='roti'){ autoSetSeason(); calcRoti(); }
 }
 
 /* ═══════════ API KEY ═══════════ */
