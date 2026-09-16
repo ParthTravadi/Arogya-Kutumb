@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb — आरोग्य कुटुम्ब </title>
+<title>Arogya Kutumb — आरोग्य कुटुम्ब · v9</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -258,7 +258,7 @@ input:focus,select:focus{border-color:var(--saffron)}
     <div class="mast-om">ॐ</div>
     <h1 class="mast-h">Arogya Kutumb</h1>
     <div class="mast-dev">आरोग्य कुटुम्ब</div>
-    <div class="mast-sub">Holistic Family Health · Nutrition · Ayurveda · Ahmedabad</div>
+    <div class="mast-sub">Holistic Family Health · Nutrition · Ayurveda · <span id="mastCity">India</span></div>
   </div>
 </div>
 
@@ -345,13 +345,14 @@ input:focus,select:focus{border-color:var(--saffron)}
     <div class="g3">
       <div class="fg"><label>City / Location <span id="geoStatus" style="font-size:.65rem;color:var(--sprout);font-weight:400;margin-left:.35rem"></span></label>
       <div style="display:flex;gap:.5rem">
-        <input id="inCity" value="Ahmedabad" oninput="saveLoc()" style="flex:1">
+        <input id="inCity" value="" placeholder="Auto-detected from GPS" oninput="saveLoc()" style="flex:1">
         <button class="btn btn-g" onclick="autoDetectLocation(false)" style="white-space:nowrap;font-size:.72rem;padding:.4rem .85rem" title="Get live GPS location + live AQI">📍 Live detect</button>
       </div>
     </div>
-      <div class="fg"><label>State</label><input id="inState" value="Gujarat" oninput="saveLoc()"></div>
+      <div class="fg"><label>State</label><input id="inState" value="" placeholder="Auto-detected" oninput="saveLoc()"></div>
       <div class="fg"><label>AQI <span style="font-size:.65rem;font-weight:400;text-transform:none">(auto-fetched or enter manually)</span></label><input id="inAqi" type="number" placeholder="Auto-fetched on detect" oninput="saveLoc()"></div>
     </div>
+    <div id="locDetectNote" style="font-size:.75rem;color:var(--sprout);margin-top:.6rem;display:none;font-weight:500"></div>
     <div id="aqiGuide" style="font-size:.75rem;color:var(--muted);margin-top:.3rem">
       AQI guide: <span class="aqi-g">0–50 Good</span> · <span class="aqi-m">51–100 Moderate</span> · <span style="color:#E05A5A">101–150 Unhealthy for sensitive</span> · <span style="color:var(--pitta-r)">151+ Unhealthy</span>
     </div>
@@ -631,25 +632,32 @@ input:focus,select:focus{border-color:var(--saffron)}
 /* ═══════════ STATE ═══════════ */
 let FAM = JSON.parse(localStorage.getItem('ak2_fam')||'[]');
 let HAB = JSON.parse(localStorage.getItem('ak2_hab')||'{}');
-let LOC = JSON.parse(localStorage.getItem('ak2_loc')||'{"city":"Ahmedabad","state":"Gujarat","aqi":""}');
+let LOC = JSON.parse(localStorage.getItem('ak2_loc')||'{"city":"","state":"","aqi":"","resolved":false}');
+let GEO_RESOLVING = false; // flag: geolocation is in-flight
 let curHM = 'all', curMonth = new Date().getMonth(), curYear = new Date().getFullYear();
 const API_KEY = 'ak2_key';
 
 /* ═══════════ BOOT ═══════════ */
 window.onload = ()=>{
-  // Restore saved location if available, else auto-detect
+  // Always auto-detect location on every load
+  // Show saved location immediately as placeholder while GPS runs
   if(LOC.city){
-    document.getElementById('inCity').value = LOC.city;
+    document.getElementById('inCity').value  = LOC.city;
     document.getElementById('inState').value = LOC.state||'';
-    document.getElementById('inAqi').value = LOC.aqi||'';
-  } else {
-    // First visit — silently auto-detect
-    autoDetectLocation(true);
+    document.getElementById('inAqi').value   = LOC.aqi||'';
+    // Show saved city in bar immediately, then update when GPS resolves
+    setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
   }
+  // Always re-detect on every load (uses cached GPS if within 5 min)
+  autoDetectLocation(true);
+  // Show a quote immediately without waiting for tick()
+  updateQuote(new Date());
   const k = localStorage.getItem(API_KEY);
   if(k) document.getElementById('apiIn').value = k;
 
-  tick(); setInterval(tick, 30000);
+  // Small delay so autoDetect sets GEO_RESOLVING=true before first tick
+  setTimeout(tick, 400);
+  setInterval(tick, 30000);
   renderFam(); autoSetSeason(); calcRoti(); renderTracker(); renderMantra(); renderRashiGrid();
   showSeasonAuto(); loadDashAi();
   const st = document.getElementById('apiSt');
@@ -669,10 +677,14 @@ function tick(){
   const aqiCls = !LOC.aqi?'':LOC.aqi<51?'aqi-g':LOC.aqi<101?'aqi-m':'aqi-b';
 
   setText('ctxTime',`${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS_S[n.getMonth()]} · ${n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`);
-  // Only update city from LOC if geolocation already resolved it
+  // Update city only when not currently resolving GPS
   const cityEl = document.getElementById('ctxCity');
-  if(cityEl && !cityEl.textContent.includes('Detecting') && LOC.city){
-    cityEl.textContent = `${LOC.city}${LOC.state?', '+LOC.state:''}`;
+  if(cityEl && !GEO_RESOLVING){
+    if(LOC.city){
+      cityEl.textContent = `${LOC.city}${LOC.state?', '+LOC.state:''}`;
+    } else {
+      cityEl.textContent = 'Detecting location…';
+    }
   }
   setText('ctxRitu', ritu.name);
   const aqiEl = document.getElementById('ctxAqi');
@@ -697,6 +709,9 @@ function tick(){
   }
 
   setText('ds-fam', FAM.length);
+  // Update masthead city dynamically
+  const mastCity = document.getElementById('mastCity');
+  if(mastCity && LOC.city) mastCity.textContent = LOC.city;
   setText('ds-ritu', ritu.icon);
   const aqiStat = document.getElementById('ds-aqi');
   if(aqiStat){
@@ -743,7 +758,7 @@ const RITU_DATA = {
   autumn:{id:'autumn',name:'Sharad (Autumn)',icon:'🍂',period:'October – November',temp:'25–32°C',dosha:'Pitta residual',
     hBg:'var(--autumn-bg)',hBorder:'var(--autumn-b)',hColor:'var(--autumn-r)',
     tagline:'Peak Ojas season — build immunity reserves now',
-    principle:"Sharad is Ahmedabad's finest season. Agni is strong, weather is pleasant, and the body absorbs and stores nutrients at peak efficiency. This is the Ojas (vital immunity essence) building window. Run the full 5-flour blend at maximum dose. Fresh amla is in season across Gujarat — eat 2 daily. Chyawanprash is the Ayurvedic Ojas compound for this season.",
+    principle:"Sharad is Ahmedabad finest season. Agni is strong, weather is pleasant, and the body absorbs and stores nutrients at peak efficiency. This is the Ojas (vital immunity essence) building window. Run the full 5-flour blend at maximum dose. Fresh amla is in season across Gujarat — eat 2 daily. Chyawanprash is the Ayurvedic Ojas compound for this season.",
     pills:['Ojas peak','Strong Agni','Full 5 flours','Amla season','25–32°C'],
     pillColors:['#EAF3DE','#EAF3DE','#EAF3DE','#FAEEDA','#E6F1FB'],
     flours:{Jowar:'72g',Chana:'72g',Gehu:'72g',Bajra:'72g',Soya:'72g'},
@@ -851,100 +866,118 @@ function renderSeason(id){
 /* ═══════════ LOCATION ═══════════ */
 async function autoDetectLocation(silent=false){
   const st = document.getElementById('geoStatus');
+
   if(!navigator.geolocation){
-    if(!silent) st.textContent='GPS not supported in this browser';
-    setText('ctxCity', LOC.city ? `${LOC.city}, ${LOC.state}` : 'Location unavailable');
+    if(st) st.textContent = 'GPS not supported';
+    if(!LOC.city) setText('ctxCity', 'Enter city in Setup');
     return;
   }
-  if(!silent) st.textContent='📍 Detecting…';
-  setText('ctxCity','Detecting location…');
+
+  // Show detecting state
+  GEO_RESOLVING = true;
+  setText('ctxCity', 'Detecting location…');
+  if(st && !silent) st.textContent = '📍 Detecting…';
 
   navigator.geolocation.getCurrentPosition(
     async pos => {
-      const {latitude: lat, longitude: lon} = pos.coords;
+      const {latitude:lat, longitude:lon} = pos.coords;
       try {
-        // 1. Reverse geocode — free, no API key
+        // ── Reverse geocode via Nominatim (free, no key) ──
         const geoRes = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-          {headers:{'Accept-Language':'en'}}
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`,
+          {headers:{'User-Agent':'ArogyaKutumb/1.0'}}
         );
         const geo = await geoRes.json();
-        const city  = geo.address.city || geo.address.town || geo.address.village ||
-                      geo.address.county || geo.address.suburb || 'Your location';
-        const state = geo.address.state || '';
-        const country = geo.address.country_code?.toUpperCase() || '';
+        const addr   = geo.address || {};
+        const city   = addr.city || addr.town || addr.village || addr.county || addr.suburb || 'Your city';
+        const state  = addr.state || '';
+        const country= (addr.country_code||'').toUpperCase();
+        const display= state ? `${city}, ${state}` : `${city}, ${country}`;
 
-        // 2. Live AQI from Open-Meteo (free, no key, uses PM2.5 → AQI approx)
-        let aqiVal = LOC.aqi || '';
+        // ── Live AQI via Open-Meteo (free, no key) ──
+        let aqiVal = '';
         try {
           const aqiRes = await fetch(
-            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm2_5,european_aqi`
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=pm2_5,european_aqi`
           );
-          const aqiData = await aqiRes.json();
-          if(aqiData.current?.european_aqi != null){
-            // Convert EU AQI (0-500) — use directly as proxy for US AQI display
-            aqiVal = Math.round(aqiData.current.european_aqi);
+          const aqiJson = await aqiRes.json();
+          if(aqiJson.current?.european_aqi != null){
+            aqiVal = Math.round(aqiJson.current.european_aqi);
           }
-        } catch(e){ /* AQI fetch failed — keep manual value */ }
+        } catch(e){ /* AQI API unavailable — keep manual value */ }
 
-        // Update state
-        LOC.city  = city;
-        LOC.state = state;
-        LOC.lat   = lat;
-        LOC.lon   = lon;
-        if(aqiVal !== '') LOC.aqi = aqiVal;
+        // ── Persist to LOC + localStorage ──
+        LOC = { city, state, lat, lon,
+                aqi: aqiVal !== '' ? aqiVal : (LOC.aqi||''),
+                resolved: true };
         localStorage.setItem('ak2_loc', JSON.stringify(LOC));
 
-        // Update inputs
-        document.getElementById('inCity').value  = city;
-        document.getElementById('inState').value = state;
-        if(aqiVal !== '') document.getElementById('inAqi').value = aqiVal;
+        // ── Update all UI elements ──
+        setText('ctxCity', display);
+        const el_city  = document.getElementById('inCity');
+        const el_state = document.getElementById('inState');
+        const el_aqi   = document.getElementById('inAqi');
+        if(el_city)  el_city.value  = city;
+        if(el_state) el_state.value = state;
+        if(aqiVal !== '' && el_aqi) el_aqi.value = aqiVal;
 
-        // Update ctx bar
-        const displayCity = state ? `${city}, ${state}` : `${city}, ${country}`;
-        setText('ctxCity', displayCity);
-
-        // Update AQI display
-        const aqiEl = document.getElementById('ctxAqi');
-        if(aqiEl && aqiVal !== ''){
-          aqiEl.textContent = aqiVal;
-          aqiEl.className   = 'ctx-val ' + (aqiVal<51?'aqi-g':aqiVal<101?'aqi-m':'aqi-b');
-          document.getElementById('ds-aqi').textContent = aqiVal;
-          document.getElementById('ds-aqi').className   = 'dstat-val ' + (aqiVal<51?'aqi-g':aqiVal<101?'aqi-m':'aqi-b');
+        // ── Update AQI in ctx bar & dashboard ──
+        if(aqiVal !== ''){
+          const cls = aqiVal<51?'aqi-g':aqiVal<101?'aqi-m':'aqi-b';
+          const aqiEl = document.getElementById('ctxAqi');
+          if(aqiEl){ aqiEl.textContent=String(aqiVal); aqiEl.className='ctx-val '+cls; aqiEl.style.opacity='1'; aqiEl.onclick=null; }
+          const dAqi = document.getElementById('ds-aqi');
+          if(dAqi){ dAqi.textContent=String(aqiVal); dAqi.className='dstat-val '+cls; }
         }
 
-        if(!silent) st.textContent = `✅ ${displayCity}${aqiVal!==''?' · AQI '+aqiVal:''}`;
+        const geoNote = `✅ GPS resolved: ${display}${aqiVal!==''?' · AQI '+aqiVal:''}`;
+        if(st) st.textContent = geoNote;
+        // Also update a visible note on the location card
+        const locNote = document.getElementById('locDetectNote');
+        if(locNote){
+          locNote.textContent = geoNote;
+          locNote.style.color = '#27500A';
+          locNote.style.display = 'block';
+        }
 
-        // Refresh AI insight with real location
+        // Refresh AI insight now we have real location
         loadDashAi();
 
       } catch(err) {
-        if(!silent) st.textContent = 'Could not resolve location';
-        setText('ctxCity', LOC.city ? `${LOC.city}, ${LOC.state}` : 'Location error');
+        // Geocoding failed — keep any saved location
+        if(LOC.city) setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
+        else         setText('ctxCity', 'Could not resolve — enter manually');
+        if(st) st.textContent = 'Geocoding failed — try again';
       }
+      GEO_RESOLVING = false;
     },
     err => {
-      // Permission denied or timeout
-      const msg = err.code===1 ? 'Location permission denied' :
-                  err.code===2 ? 'Location unavailable'       : 'Location timeout';
-      if(!silent) st.textContent = msg;
-      // Fall back to saved location or show prompt
+      GEO_RESOLVING = false;
+      const msgs = {1:'Location access denied',2:'Location unavailable',3:'Location timed out'};
+      const msg  = msgs[err.code] || 'Location error';
+
       if(LOC.city){
-        setText('ctxCity', `${LOC.city}, ${LOC.state} (saved)`);
+        setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
+        if(st && !silent) st.textContent = `${msg} — using saved: ${LOC.city}`;
       } else {
-        setText('ctxCity', 'Allow location access →');
+        setText('ctxCity', 'Enter city in Setup →');
+        // Make the ctx city clickable to go to setup
+        const el = document.getElementById('ctxCity');
+        if(el){ el.style.cursor='pointer'; el.onclick=()=>showTab('family'); }
+        if(st) st.textContent = msg + ' — tap to enter city manually';
       }
     },
-    {timeout:10000, maximumAge:300000, enableHighAccuracy:false}
+    { timeout:8000, maximumAge:300000, enableHighAccuracy:false }
   );
 }
 
+
 function saveLoc(){
-  LOC.city  = document.getElementById('inCity').value  || '';
-  LOC.state = document.getElementById('inState').value || '';
-  LOC.aqi   = document.getElementById('inAqi').value   || '';
+  LOC.city     = document.getElementById('inCity').value  || '';
+  LOC.state    = document.getElementById('inState').value || '';
+  LOC.aqi      = document.getElementById('inAqi').value   || '';
+  LOC.resolved = !!(LOC.city); // mark resolved when manually entered
   localStorage.setItem('ak2_loc', JSON.stringify(LOC));
-  // Update ctx bar immediately
   if(LOC.city) setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
   tick();
 }
@@ -1265,22 +1298,84 @@ function adjMeal(name, meal, delta, btn){
 }
 
 /* ═══════════ QUOTES ═══════════ */
-const QS=[
-  {s:'आहारः शुद्धे सत्त्वशुद्धिः',m:'When food is pure, the mind becomes pure. — Chandogya Upanishad'},
-  {s:'स्वस्थस्य स्वास्थ्य रक्षणं',m:'To protect the health of the healthy — first duty of Ayurveda. — Charaka Samhita'},
-  {s:'हिताहारी सदा रोगी न भवेत्',m:'One who always eats what is beneficial never becomes ill. — Ashtanga Hridayam'},
-  {s:'प्रकृतिः परमो धर्मः',m:'Nature is the highest dharma. Live in harmony with it. — Manusmriti'},
-  {s:'सर्वे भवन्तु सुखिनः सर्वे सन्तु निरामयाः',m:'May all beings be happy. May all be free from illness. — Brihadaranyaka Upanishad'},
-  {s:'नास्ति तेजः समं तपः',m:'There is no austerity equal to the discipline of proper eating. — Mahabharata'},
-  {s:'ओजः प्राणस्य मूलं च',m:'Ojas (vital essence) is the very root of life-force. Protect it daily. — Charaka'},
+const QS = [
+  // Ayurveda & Food
+  {s:'आहारः प्राणिनां प्राणः',           m:'"Food is the life-force of all living beings." — Ancient Ayurveda'},
+  {s:'आहारः शुद्धे सत्त्वशुद्धिः',       m:'"When food is pure, the mind becomes pure." — Chandogya Upanishad'},
+  {s:'हिताहारी सदा रोगी न भवेत्',        m:'"One who always eats what is beneficial never becomes ill." — Ashtanga Hridayam'},
+  {s:'अन्नं ब्रह्म रसो विष्णुः',         m:'"Food is Brahma, its essence is Vishnu, the enjoyer is Shiva." — Taittiriya Upanishad'},
+  {s:'भुक्तमात्रे हितं पेयं',            m:'"After eating, drink only that which is beneficial to digestion." — Charaka Samhita'},
+  {s:'देहो देवालयः प्रोक्तः',            m:'"The body is said to be a temple. Keep it sacred through right food." — Shiva Samhita'},
+  {s:'षड्रसं भोजनं कुर्यात्',           m:'"One should eat food containing all six tastes — sweet, sour, salty, pungent, bitter, astringent." — Charaka'},
+  {s:'पथ्ये सति गदार्तस्य',             m:'"Even the sick become healthy through proper diet alone." — Charaka Samhita'},
+  {s:'अजीर्णे भेषजं वारि',              m:'"Water is medicine for indigestion. Digestion is the foundation of health." — Vagbhata'},
+  {s:'लङ्घनं परमं औषधम्',              m:'"Fasting (lightening the digestive load) is the supreme medicine." — Charaka Samhita'},
+  // Health & Body
+  {s:'स्वस्थस्य स्वास्थ्य रक्षणं',       m:'"To protect the health of the healthy — this is the first duty of medicine." — Charaka Samhita'},
+  {s:'आयुर्वेदः अमृतानाम्',             m:'"Ayurveda is the nectar of immortality for those who understand it." — Sushruta Samhita'},
+  {s:'प्रकृतिः परमो धर्मः',             m:'"Nature is the highest dharma. Live in harmony with it." — Manusmriti'},
+  {s:'रोगाः सर्वेऽपि मन्देऽग्नौ',       m:'"All diseases arise from weak digestive fire (Agni)." — Charaka Samhita'},
+  {s:'व्यायामः स्वास्थ्यकरः',           m:'"Exercise is the maker of health. Move the body daily." — Sushruta'},
+  {s:'निद्रायत्तं सुखं दुःखम्',          m:'"Happiness and misery, growth and decay — all depend on the quality of sleep." — Charaka'},
+  {s:'ओजः प्राणस्य मूलं च',            m:'"Ojas is the very root of life-force. Protect it through right living." — Charaka Samhita'},
+  {s:'त्रयः स्तम्भाः इति स्मृताः',      m:'"The three pillars of life are: food, sleep, and brahmacharya (disciplined living)." — Charaka'},
+  {s:'वातः पित्तः कफश्चैव',            m:'"Vata, Pitta and Kapha — when balanced they are pillars of health; when imbalanced, they cause disease." — Sushruta'},
+  {s:'आत्मज्ञानं परं बलम्',            m:'"Self-knowledge is the highest strength. Know your Prakriti." — Charaka'},
+  // Mind & Spirit
+  {s:'मनः एव मनुष्याणाम्',            m:'"The mind alone is the cause of bondage and liberation for human beings." — Amritabindu Upanishad'},
+  {s:'योगः चित्तवृत्तिनिरोधः',          m:'"Yoga is the cessation of the fluctuations of the mind." — Patanjali Yoga Sutras'},
+  {s:'सर्वे भवन्तु सुखिनः',            m:'"May all beings be happy. May all be free from illness." — Brihadaranyaka Upanishad'},
+  {s:'तत्त्वमसि',                      m:'"That thou art — you are one with the infinite consciousness." — Chandogya Upanishad'},
+  {s:'अहम् ब्रह्मास्मि',               m:'"I am Brahman — the infinite, the eternal, the pure." — Brihadaranyaka Upanishad'},
+  {s:'शान्तिः शान्तिः शान्तिः',         m:'"Peace, Peace, Peace — in body, mind, and spirit." — Vedic invocation'},
+  {s:'धी शक्तिः सर्व शक्तिषु',          m:'"Among all powers, the power of the intellect is supreme." — Mahabharata'},
+  {s:'ज्ञानं परमं बलम्',               m:'"Knowledge is the highest strength. Seek it relentlessly." — Hitopadesha'},
+  {s:'सत्यमेव जयते',                   m:'"Truth alone triumphs. In health as in life, truth is the foundation." — Mundaka Upanishad'},
+  {s:'कर्म एव धर्मः',                  m:'"Right action is right dharma. Your daily health habits are karma." — Bhagavad Gita'},
+  // Family & Community
+  {s:'कुटुम्बं प्राणिनां बलम्',         m:'"Family is the true strength of living beings. Health begins at home." — Chanakya Niti'},
+  {s:'माता शत्रुः पिता वैरी',           m:'"That parent is an enemy who does not teach their child the way to health." — Chanakya Niti'},
+  {s:'गृहे देवः प्रसन्नः स्यात्',       m:'"When the householder is healthy and disciplined, the divine is pleased at home." — Grihya Sutra'},
+  {s:'प्रेम एव परमौषधम्',              m:'"Love itself is the highest medicine. Heal your family with attention and care." — Vedic aphorism'},
+  {s:'वसुधैव कुटुम्बकम्',              m:'"The whole world is one family. Health shared is health multiplied." — Maha Upanishad'},
+  // Discipline & Practice
+  {s:'अभ्यासेन तु कौन्तेय',             m:'"Through practice and non-attachment, O Arjuna, the mind is controlled." — Bhagavad Gita 6.35'},
+  {s:'उत्तिष्ठत जाग्रत',               m:'"Arise, awake, and stop not till the goal is reached." — Katha Upanishad'},
+  {s:'नास्ति तेजः समं तपः',            m:'"There is no austerity equal to the discipline of proper eating." — Mahabharata'},
+  {s:'दिनचर्या सुखस्य मूलम्',           m:'"Daily routine (Dinacharya) is the root of happiness and health." — Ashtanga Hridayam'},
+  {s:'ब्राह्मे मुहूर्ते उत्तिष्ठेत्',  m:'"One should rise at Brahma Muhurta (4–6 AM) — the time of wisdom and vitality." — Charaka'},
+  {s:'संतोषः परमं सुखम्',              m:'"Contentment is the highest happiness. Gratitude heals." — Patanjali Yoga Sutras'},
+  {s:'श्रद्धावान् लभते ज्ञानम्',       m:"The one with faith attains knowledge. Faith in your body's wisdom is medicine. — Bhagavad Gita"},
+  {s:'स्वयं कृते स्वयं भुञ्जे',         m:'"As you act, so you experience. Your health is built by your daily choices." — Karma Siddhanta'},
+  {s:'आरोग्यं परमं भाग्यम्',           m:'"Health is the highest fortune. Protect it with more care than any wealth." — Chanakya'},
+  {s:'धैर्यं सर्वत्र साधनम्',           m:'"Patience and perseverance are the means to every good. Health is built slowly, lost quickly." — Hitopadesha'},
+  // Nature & Seasons
+  {s:'ऋतुचर्या आरोग्यस्य मूलम्',       m:'"Seasonal routine (Ritucharya) is the root of all health. Live with the seasons." — Charaka Samhita'},
+  {s:'प्रकृतिः वैद्यश्रेष्ठः',         m:'"Nature is the greatest physician. Trust her rhythms above all." — Ayurvedic aphorism'},
+  {s:'सूर्यः सर्वस्य चक्षुषः',          m:'"The Sun is the eye of all creation. Walk in morning sunlight daily." — Rigveda'},
+  {s:'जलं जीवनमुच्यते',               m:'"Water is called life itself. Drink with awareness, at the right time." — Atharva Veda'},
+  {s:'वायुः प्राणस्य जीवनम्',           m:'"Air is the life of the life-force. Breathe consciously; protect your lungs." — Charaka'},
+  {s:'वनस्पतयः औषधीः',               m:'"Plants are medicines. Every herb in your roti is a healer." — Rigveda'},
+  {s:'पृथ्वी माता मम',               m:'"The Earth is my mother. Eat food that comes from her directly." — Atharva Veda 12.1.12'},
+  {s:'कालः परमो गुरुः',               m:'"Time is the supreme teacher. Eat at the right time and health follows." — Charaka'},
+  // Gratitude & Wellbeing
+  {s:'कृतज्ञता परमं सुखम्',           m:'"Gratitude is the highest happiness. Begin each meal with thankfulness." — Vedic tradition'},
+  {s:'दानं परमो धर्मः',               m:'"Giving is the highest dharma. Sharing food and health knowledge is sacred." — Mahabharata'},
+  {s:'आनन्दं ब्रह्मेति व्यजानात्',     m:'"Ananda — bliss — is Brahman. A healthy body is the doorway to bliss." — Taittiriya Upanishad'},
+  {s:'जीवेम शरदः शतम्',              m:'"May we live a hundred autumns — in health, in awareness, in joy." — Rigveda'},
+  {s:'आयुष्मान् भव',                 m:'"May you be blessed with long life and radiant health." — Traditional Vedic blessing'},
+  {s:'शुभं भवतु',                    m:'"May all that is auspicious come to you and your family today." — Vedic benediction'},
+  {s:'स्वस्थ रहो, प्रसन्न रहो',         m:'"Stay healthy, stay joyful — these two together are the complete human life." — Charaka Samhita'},
 ];
+
+/* Rotate on every page load using a random index seeded at load-time */
+const _QS_IDX = Math.floor(Math.random() * QS.length);
+
 function updateQuote(d){
-  // Use day-of-year so quote changes daily and doesn't repeat weekly
-  const start=new Date(d.getFullYear(),0,0);
-  const dayOfYear=Math.floor((d-start)/(1000*60*60*24));
-  const q=QS[dayOfYear%QS.length];
-  document.getElementById('qSkt').textContent=q.s;
-  document.getElementById('qMean').textContent=`"${q.m}"`;}
+  // Use random index chosen at page-load time — fresh on every reload
+  const q = QS[_QS_IDX];
+  document.getElementById('qSkt').textContent = q.s;
+  document.getElementById('qMean').textContent = q.m;}
 
 /* ═══════════ HABITS ═══════════ */
 const HMASTER=[
