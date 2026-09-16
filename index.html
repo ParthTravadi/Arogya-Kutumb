@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb — आरोग्य कुटुम्ब · v9</title>
+<title>Arogya Kutumb — आरोग्य कुटुम्ब</title>
+<meta name="description" content="Holistic family health — Ayurveda, seasonal nutrition, roti calculator, habit tracker for Ahmedabad families.">
+<meta name="theme-color" content="#1A1005">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Arogya Kutumb">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -226,6 +233,20 @@ input:focus,select:focus{border-color:var(--saffron)}
 /* SHARE */
 .share-hero{background:linear-gradient(135deg,var(--earth),#5C3A0A);border-radius:16px;padding:2rem;text-align:center;color:white;margin-bottom:1.4rem}
 .deploy-step{background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:.85rem 1rem;font-family:monospace;font-size:.78rem;color:var(--earth);line-height:2;margin-bottom:.75rem}
+
+/* PROVIDER TOGGLE */
+.prov-tabs{display:flex;gap:6px;margin-bottom:1rem}
+.ptab{padding:6px 14px;border-radius:20px;font-size:.75rem;font-weight:500;border:1.5px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .12s}
+.ptab.act{background:var(--leaf);border-color:var(--leaf);color:white}
+.ptab.or-act{background:#7B3FE4;border-color:#7B3FE4;color:white}
+.or-badge{background:#7B3FE4;color:white;font-size:.6rem;padding:2px 7px;border-radius:20px;font-weight:500;margin-left:.35rem}
+.token-meter{display:flex;align-items:center;gap:.75rem;padding:.6rem .85rem;background:var(--mist);border:1px solid var(--autumn-b);border-radius:8px;margin-top:.75rem;font-size:.75rem;color:var(--leaf);flex-wrap:wrap}
+.token-meter strong{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--earth)}
+
+/* PWA install banner */
+.pwa-banner{display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:linear-gradient(90deg,#E8F3DF,#FFFDF7);border:1px solid var(--autumn-b);border-radius:9px;margin-bottom:1rem;font-size:.78rem;color:var(--leaf)}
+.pwa-banner.show{display:flex}
+.pwa-install-btn{margin-left:auto;padding:5px 14px;border-radius:20px;border:none;background:var(--leaf);color:white;font-size:.74rem;font-weight:500;cursor:pointer;white-space:nowrap}
 
 /* ROTI PRESET BUTTONS */
 .rpbtn{padding:.38rem .75rem;border-radius:8px;border:1.5px solid var(--border);background:var(--card);
@@ -605,17 +626,70 @@ input:focus,select:focus{border-color:var(--saffron)}
     </div>
   </div>
   <div class="card">
-    <div class="ct">🔑 API Key (for Rashifal + AI insights)</div>
-    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem">AI features use Claude API. Your key is stored only in your browser's localStorage — never sent to any server other than Anthropic.</p>
-    <div class="g2">
-      <div class="fg" style="margin:0"><label>Anthropic API Key</label>
-        <input type="password" id="apiIn" placeholder="sk-ant-…"></div>
-      <div style="display:flex;align-items:flex-end">
-        <button class="btn btn-g" onclick="saveKey()" style="width:100%">Save locally 🔒</button>
+    <div class="ct">🤖 AI Provider &amp; API Key</div>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:.85rem">Choose your AI provider. Keys are stored only in your browser — never sent to any server except the chosen provider.</p>
+
+    <!-- Provider toggle -->
+    <div class="prov-tabs">
+      <div class="ptab act" id="ptab-anthropic" onclick="setProvider('anthropic')">🟠 Anthropic (Claude)</div>
+      <div class="ptab" id="ptab-openrouter" onclick="setProvider('openrouter')">🟣 OpenRouter <span class="or-badge">FREE</span></div>
+    </div>
+
+    <!-- Anthropic panel -->
+    <div id="prov-anthropic-panel">
+      <div class="g2">
+        <div class="fg" style="margin:0"><label>Anthropic API Key</label>
+          <input type="password" id="apiIn" placeholder="sk-ant-…"></div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn btn-g" onclick="saveKey()" style="width:100%">Save locally 🔒</button>
+        </div>
+      </div>
+      <p style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Get a key at <strong>console.anthropic.com</strong> · Model: claude-sonnet-4-6 · ~$0.003 per insight</p>
+    </div>
+
+    <!-- OpenRouter panel -->
+    <div id="prov-openrouter-panel" style="display:none">
+      <div class="g2">
+        <div class="fg" style="margin:0"><label>OpenRouter API Key</label>
+          <input type="password" id="orKeyIn" placeholder="sk-or-…"></div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn" style="background:#7B3FE4;color:white;width:100%" onclick="saveOrKey()">Save locally 🔒</button>
+        </div>
+      </div>
+      <div style="margin-top:.75rem;font-size:.75rem;color:var(--muted);line-height:1.7">
+        Free model: <strong style="color:#7B3FE4">google/gemini-flash-1.5</strong> (1M context · fast · warm tone)<br>
+        Get a free key at <strong>openrouter.ai</strong> → No credit card needed for free-tier models
       </div>
     </div>
+
     <div id="apiSt" style="font-size:.78rem;margin-top:.5rem;color:var(--sprout)"></div>
-    <p style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Get a free key at console.anthropic.com · Key stored in localStorage only</p>
+
+    <!-- Token / cost meter (shows after any key is saved) -->
+    <div class="token-meter" id="tokenMeter" style="display:none">
+      <div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Session usage</div>
+        <strong id="tokenCount">0</strong> <span style="color:var(--muted)">tokens</span>
+      </div>
+      <div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Est. cost</div>
+        <strong id="tokenCost">₹0.00</strong>
+      </div>
+      <div>
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">AI calls</div>
+        <strong id="aiCallCount">0</strong>
+      </div>
+      <button onclick="resetTokens()" style="margin-left:auto;font-size:.68rem;padding:3px 9px;border-radius:6px;border:1px solid var(--border);background:white;color:var(--muted);cursor:pointer">Reset</button>
+    </div>
+  </div>
+
+  <!-- PWA install banner -->
+  <div class="pwa-banner" id="pwaBanner">
+    <span>📲</span>
+    <div>
+      <strong style="color:var(--earth)">Install as App</strong><br>
+      <span style="color:var(--muted)">Add to Home Screen for offline access</span>
+    </div>
+    <button class="pwa-install-btn" id="pwaInstallBtn" onclick="pwaInstall()">Install →</button>
   </div>
 </div>
 
@@ -624,7 +698,8 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="f-logo">🌿 Arogya Kutumb — आरोग्य कुटुम्ब</div>
   <div class="f-text">
     आहारः प्राणिनां प्राणः — Food is the life-force of all living beings.<br>
-    Ayurvedic wisdom · Modern nutrition science · Zero server · Zero tracking · Your data stays on your device.
+    Ayurvedic wisdom · Modern nutrition science · Zero server · Zero tracking · Your data stays on your device.<br>
+    <span style="opacity:.35">v10 · PWA · Multi-provider AI</span>
   </div>
 </div>
 
@@ -633,9 +708,129 @@ input:focus,select:focus{border-color:var(--saffron)}
 let FAM = JSON.parse(localStorage.getItem('ak2_fam')||'[]');
 let HAB = JSON.parse(localStorage.getItem('ak2_hab')||'{}');
 let LOC = JSON.parse(localStorage.getItem('ak2_loc')||'{"city":"","state":"","aqi":"","resolved":false}');
-let GEO_RESOLVING = false; // flag: geolocation is in-flight
+let GEO_RESOLVING = false;
 let curHM = 'all', curMonth = new Date().getMonth(), curYear = new Date().getFullYear();
 const API_KEY = 'ak2_key';
+const OR_KEY  = 'ak2_or_key';
+const PROV_KEY= 'ak2_provider'; // 'anthropic' | 'openrouter'
+let SESSION_TOKENS = 0, SESSION_CALLS = 0;
+let deferredPWAPrompt = null;
+
+/* ═══════════ PWA ═══════════ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPWAPrompt = e;
+  const banner = document.getElementById('pwaBanner');
+  if(banner) banner.classList.add('show');
+});
+window.addEventListener('appinstalled', ()=>{
+  const banner = document.getElementById('pwaBanner');
+  if(banner) banner.classList.remove('show');
+  deferredPWAPrompt = null;
+});
+function pwaInstall(){
+  if(!deferredPWAPrompt) return;
+  deferredPWAPrompt.prompt();
+  deferredPWAPrompt.userChoice.then(()=>{ deferredPWAPrompt=null; });
+}
+
+/* ═══════════ PROVIDER ═══════════ */
+function getProvider(){ return localStorage.getItem(PROV_KEY)||'anthropic'; }
+
+function setProvider(p){
+  localStorage.setItem(PROV_KEY, p);
+  document.getElementById('ptab-anthropic').className = 'ptab'+(p==='anthropic'?' act':'');
+  document.getElementById('ptab-openrouter').className = 'ptab'+(p==='openrouter'?' or-act':'');
+  document.getElementById('prov-anthropic-panel').style.display = p==='anthropic'?'':'none';
+  document.getElementById('prov-openrouter-panel').style.display = p==='openrouter'?'':'none';
+  const st = document.getElementById('apiSt');
+  if(st) st.textContent = '';
+  updateTokenMeter();
+}
+
+/* ═══════════ TOKEN METER ═══════════ */
+function trackTokens(usage){
+  if(!usage) return;
+  const t = (usage.input_tokens||usage.prompt_tokens||0)+(usage.output_tokens||usage.completion_tokens||0);
+  SESSION_TOKENS += t;
+  SESSION_CALLS  += 1;
+  updateTokenMeter();
+}
+function updateTokenMeter(){
+  const k = getProvider()==='anthropic'
+    ? localStorage.getItem(API_KEY)
+    : localStorage.getItem(OR_KEY);
+  const meter = document.getElementById('tokenMeter');
+  if(!meter) return;
+  if(!k){ meter.style.display='none'; return; }
+  meter.style.display='flex';
+  const provider = getProvider();
+  // Anthropic sonnet-4-6: ~$3/M input + $15/M output ≈ avg $9/M tokens → ₹0.75/1K tokens
+  // OpenRouter free: $0
+  const costPer1K = provider==='openrouter' ? 0 : 0.75;
+  const cost = ((SESSION_TOKENS/1000)*costPer1K).toFixed(2);
+  const tc = document.getElementById('tokenCount');
+  const tco = document.getElementById('tokenCost');
+  const tca = document.getElementById('aiCallCount');
+  if(tc) tc.textContent = SESSION_TOKENS.toLocaleString();
+  if(tco) tco.textContent = provider==='openrouter' ? '₹0.00 (free)' : `₹${cost}`;
+  if(tca) tca.textContent = SESSION_CALLS;
+}
+function resetTokens(){
+  SESSION_TOKENS=0; SESSION_CALLS=0; updateTokenMeter();
+}
+
+/* ═══════════ AI FETCH ABSTRACTION ═══════════ */
+async function callAI({prompt, maxTokens=350}){
+  const provider = getProvider();
+  if(provider==='openrouter'){
+    const k = localStorage.getItem(OR_KEY);
+    if(!k) return null;
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+k,
+        'HTTP-Referer':'https://yourname.github.io/arogya-kutumb',
+        'X-Title':'Arogya Kutumb'
+      },
+      body:JSON.stringify({
+        model:'google/gemini-flash-1.5',
+        max_tokens:maxTokens,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    if(data.usage) trackTokens(data.usage);
+    return data.choices?.[0]?.message?.content || null;
+  } else {
+    // Anthropic
+    const k = localStorage.getItem(API_KEY);
+    if(!k) return null;
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':k,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:maxTokens,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data = await res.json();
+    if(data.usage) trackTokens(data.usage);
+    return data.content?.map(c=>c.text).join('') || null;
+  }
+}
 
 /* ═══════════ BOOT ═══════════ */
 window.onload = ()=>{
@@ -652,16 +847,24 @@ window.onload = ()=>{
   autoDetectLocation(true);
   // Show a quote immediately without waiting for tick()
   updateQuote(new Date());
+  // Restore API keys to inputs
   const k = localStorage.getItem(API_KEY);
   if(k) document.getElementById('apiIn').value = k;
+  const ork = localStorage.getItem(OR_KEY);
+  if(ork) document.getElementById('orKeyIn').value = ork;
 
-  // Small delay so autoDetect sets GEO_RESOLVING=true before first tick
+  // Init provider toggle
+  setProvider(getProvider());
+  const st = document.getElementById('apiSt');
+  if((k||ork)){
+    if(st){st.textContent='✅ API key active';st.style.color='var(--sprout)';}
+  }
+  updateTokenMeter();
+
   setTimeout(tick, 400);
   setInterval(tick, 30000);
   renderFam(); autoSetSeason(); calcRoti(); renderTracker(); renderMantra(); renderRashiGrid();
   showSeasonAuto(); loadDashAi();
-  const st = document.getElementById('apiSt');
-  if(k){st.textContent='✅ API key active';st.style.color='var(--sprout)'}
 };
 
 /* ═══════════ TICK ═══════════ */
@@ -1515,21 +1718,22 @@ async function loadRashifal(rashi){
   const ro=document.getElementById('rashiOut'); ro.style.display='block';
   const rd=RASHIS.find(r=>r.n===rashi);
   const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div><div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> Consulting the stars…</div>`;
-  const k=localStorage.getItem(API_KEY);
-  if(!k){
-    ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div>
-    <div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.6rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.65rem">
-      ⚠️ <b>Static reading</b> — Add your Anthropic API key in the <b>Share</b> tab for a live AI-powered daily reading personalised to date &amp; stars.
-    </div>
-    <div class="r-body">${STATIC_RF[rashi]}</div>`;
+  const hdr=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div>`;
+  ro.innerHTML=hdr+`<div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> Consulting the stars…</div>`;
+
+  const hasKey = localStorage.getItem(API_KEY)||localStorage.getItem(OR_KEY);
+  if(!hasKey){
+    const pLabel = 'Anthropic or OpenRouter';
+    ro.innerHTML=hdr+`<div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.6rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.65rem">
+      ⚠️ <b>Static reading</b> — Add an API key (${pLabel}) in the <b>Share</b> tab for a live AI-powered daily reading.
+    </div><div class="r-body">${STATIC_RF[rashi]}</div>`;
     return;
   }
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:350,messages:[{role:'user',content:`Today is ${today}. Give a warm, practical Vedic Rashifal for ${rashi} rashi. Include: health tip for today, best Ayurvedic herb or food, auspicious time window, one Sanskrit phrase with meaning. Holistic, positive, 110 words max. Plain paragraphs only.`}]})});
-    const data=await res.json();
-    ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi} (${rd.d})</div><div class="r-date">${today}</div></div></div><div class="r-body">${(data.content?.map(c=>c.text).join('')||STATIC_RF[rashi]).replace(/\n/g,'<br>')}</div>`;
-  }catch(e){ro.innerHTML=`<div class="r-hdr"><div class="r-sym">${rd.s}</div><div><div class="r-name">${rashi}</div></div></div><div class="r-body">${STATIC_RF[rashi]}</div>`;}
+    const prompt=`Today is ${today}. Give a warm, practical Vedic Rashifal for ${rashi} rashi. Include: health tip for today, best Ayurvedic herb or food, auspicious time window, one Sanskrit phrase with meaning. Holistic, positive, 110 words max. Plain paragraphs only.`;
+    const text = await callAI({prompt, maxTokens:350});
+    ro.innerHTML=hdr+`<div class="r-body">${(text||STATIC_RF[rashi]).replace(/\n/g,'<br>')}</div>`;
+  }catch(e){ro.innerHTML=hdr+`<div class="r-body">${STATIC_RF[rashi]}</div>`;}
 }
 function renderFamRashiBoard(){
   const el=document.getElementById('famRashiBoard');
@@ -1550,21 +1754,29 @@ function selRashiForMember(n){showTab('rashifal');setTimeout(()=>{document.query
 /* ═══════════ AI ═══════════ */
 async function loadDashAi(){
   const el=document.getElementById('dashAi');
-  const k=localStorage.getItem(API_KEY);
   const ritu=getRitu(new Date().getMonth());
   const today=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
   const famSum=FAM.length?FAM.map(m=>`${m.name}(${m.age}y,${m.weight}kg,${m.gender},${m.prakriti.split(' — ')[0]})`).join('; '):'No family added yet';
-  if(!k){
+  const hasKey = localStorage.getItem(API_KEY)||localStorage.getItem(OR_KEY);
+  const provider = getProvider();
+  const provLabel = provider==='openrouter'
+    ? '<span class="or-badge" style="vertical-align:middle">OpenRouter</span>'
+    : '<span style="background:#C8760A;color:white;font-size:.6rem;padding:2px 7px;border-radius:20px;font-weight:500;vertical-align:middle">Claude</span>';
+
+  if(!hasKey){
     el.innerHTML=`<div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.5rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.5rem">
-      ⚠️ <b>Static tip</b> — Add your Anthropic API key in the <b>Share</b> tab for live daily AI recommendations personalised to your family.
+      ⚠️ <b>Static tip</b> — Add an API key in the <b>Share</b> tab for live daily AI recommendations personalised to your family.
     </div>
-    <span style="color:var(--text)">In <b>${ritu.name}</b> season in ${LOC.city}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration — your roti already has Jowar and Coconut powder doing the heavy lifting':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni — the saunth and ajwain in your monsoon roti are the fix':ritu.id==='autumn'?'Ojas building — Chyawanprash every morning and 2 fresh amla daily alongside your roti':'warming sesame and black pepper for Kapha, turmeric increased to ¾ tsp for AQI 150–200 lung protection'}.</span>
+    <span style="color:var(--text)">In <b>${ritu.name}</b> season in ${LOC.city||'Ahmedabad'}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration — your roti already has Jowar and Coconut powder doing the heavy lifting':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni — the saunth and ajwain in your monsoon roti are the fix':ritu.id==='autumn'?'Ojas building — Chyawanprash every morning and 2 fresh amla daily alongside your roti':'warming sesame and black pepper for Kapha, turmeric increased to ¾ tsp for AQI 150–200 lung protection'}.</span>
     <a href="#" onclick="showTab('share');return false" style="color:var(--saffron);margin-left:.4rem;font-size:.78rem">→ Add API key</a>`;
     return;
   }
+  el.innerHTML=`<span style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> ${provLabel} Loading personalised insight…</span>`;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:280,messages:[{role:'user',content:`Today: ${today}. City: ${LOC.city}, ${LOC.state}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`}]})});
-    const data=await res.json();el.innerHTML=data.content?.map(c=>c.text).join('')||'Could not load insight.';
+    const prompt=`Today: ${today}. City: ${LOC.city||'Ahmedabad'}, ${LOC.state||'Gujarat'}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`;
+    const text = await callAI({prompt, maxTokens:280});
+    el.innerHTML = (text||`Today in ${ritu.name}: ${ritu.principle.substring(0,120)}…`)
+      + ` <span style="font-size:.65rem;color:var(--muted);opacity:.6">[${provider==='openrouter'?'OpenRouter · free':'Claude'}]</span>`;
   }catch(e){el.innerHTML=`Today in ${ritu.name}: ${ritu.principle.substring(0,120)}…`;}
 }
 
@@ -1583,7 +1795,16 @@ function showTab(id){
 function saveKey(){
   const k=document.getElementById('apiIn').value.trim();
   if(!k.startsWith('sk-ant-')){const s=document.getElementById('apiSt');s.textContent='⚠️ Key should start with sk-ant-';s.style.color='var(--pitta-r)';return;}
-  localStorage.setItem(API_KEY,k);const s=document.getElementById('apiSt');s.textContent='✅ Saved. Refreshing AI insights…';s.style.color='var(--sprout)';loadDashAi();
+  localStorage.setItem(API_KEY,k);
+  const s=document.getElementById('apiSt');s.textContent='✅ Saved. Refreshing AI insights…';s.style.color='var(--sprout)';
+  updateTokenMeter(); loadDashAi();
+}
+function saveOrKey(){
+  const k=document.getElementById('orKeyIn').value.trim();
+  if(!k.startsWith('sk-or-')){const s=document.getElementById('apiSt');s.textContent='⚠️ OpenRouter key should start with sk-or-';s.style.color='var(--pitta-r)';return;}
+  localStorage.setItem(OR_KEY,k);
+  const s=document.getElementById('apiSt');s.textContent='✅ OpenRouter key saved. Using free Gemini Flash model.';s.style.color='#7B3FE4';
+  updateTokenMeter(); loadDashAi();
 }
 
 /* ═══════════ SHARE ═══════════ */
