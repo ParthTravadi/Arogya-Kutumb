@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb — आरोग्य कुटुम्ब</title>
+<title>Arogya Kutumb — आरोग्य कुटुम्ब v11</title>
 <meta name="description" content="Holistic family health — Ayurveda, seasonal nutrition, roti calculator, habit tracker for Ahmedabad families.">
 <meta name="theme-color" content="#1A1005">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -243,7 +243,21 @@ input:focus,select:focus{border-color:var(--saffron)}
 .token-meter{display:flex;align-items:center;gap:.75rem;padding:.6rem .85rem;background:var(--mist);border:1px solid var(--autumn-b);border-radius:8px;margin-top:.75rem;font-size:.75rem;color:var(--leaf);flex-wrap:wrap}
 .token-meter strong{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--earth)}
 
-/* PWA install banner */
+/* PWA install — home hero card */
+.pwa-hero{display:none;margin-bottom:1.25rem;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#1A4A0A 0%,#2B6E14 60%,#3D8C20 100%);padding:1.5rem 1.25rem;color:white;position:relative}
+.pwa-hero.show{display:block}
+.pwa-hero-inner{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.pwa-hero-icon{font-size:3rem;line-height:1;flex-shrink:0}
+.pwa-hero-text{flex:1;min-width:160px}
+.pwa-hero-text h3{margin:0 0 .3rem;font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;letter-spacing:.01em}
+.pwa-hero-text p{margin:0 0 .85rem;font-size:.8rem;opacity:.85;line-height:1.55}
+.pwa-hero-features{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.pwa-hero-feat{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:500}
+.pwa-install-big{display:inline-flex;align-items:center;gap:.45rem;background:white;color:#1A4A0A;border:none;border-radius:25px;padding:.6rem 1.4rem;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .12s,box-shadow .12s}
+.pwa-install-big:active{transform:scale(.97)}
+.pwa-ios-hint{display:none;margin-top:.75rem;background:rgba(255,255,255,.12);border-radius:10px;padding:.6rem .85rem;font-size:.72rem;line-height:1.6}
+.pwa-ios-hint.show{display:block}
+/* Share tab small banner (kept for context) */
 .pwa-banner{display:none;align-items:center;gap:.75rem;padding:.65rem 1rem;background:linear-gradient(90deg,#E8F3DF,#FFFDF7);border:1px solid var(--autumn-b);border-radius:9px;margin-bottom:1rem;font-size:.78rem;color:var(--leaf)}
 .pwa-banner.show{display:flex}
 .pwa-install-btn{margin-left:auto;padding:5px 14px;border-radius:20px;border:none;background:var(--leaf);color:white;font-size:.74rem;font-weight:500;cursor:pointer;white-space:nowrap}
@@ -279,7 +293,7 @@ input:focus,select:focus{border-color:var(--saffron)}
     <div class="mast-om">ॐ</div>
     <h1 class="mast-h">Arogya Kutumb</h1>
     <div class="mast-dev">आरोग्य कुटुम्ब</div>
-    <div class="mast-sub">Holistic Family Health · Nutrition · Ayurveda · <span id="mastCity">India</span></div>
+    <div class="mast-sub">Holistic Family Health · Nutrition · Ayurveda · <span id="mastCity">📍 Detecting…</span></div>
   </div>
 </div>
 
@@ -329,6 +343,31 @@ input:focus,select:focus{border-color:var(--saffron)}
 
 <!-- ══════════ DASHBOARD ══════════ -->
 <div class="sec act" id="sec-dash">
+
+  <!-- PWA Install Card — shown until installed -->
+  <div class="pwa-hero" id="pwaHero">
+    <div class="pwa-hero-inner">
+      <div class="pwa-hero-icon">📲</div>
+      <div class="pwa-hero-text">
+        <h3>Install Arogya Kutumb as an App</h3>
+        <p>Get instant access from your home screen — no app store, no login, works offline for family data, roti calculator &amp; habit tracker.</p>
+        <div class="pwa-hero-features">
+          <span class="pwa-hero-feat">⚡ Instant launch</span>
+          <span class="pwa-hero-feat">📶 Works offline</span>
+          <span class="pwa-hero-feat">🔒 No tracking</span>
+          <span class="pwa-hero-feat">🆓 Free forever</span>
+        </div>
+        <button class="pwa-install-big" id="pwaInstallBig" onclick="pwaInstall()">
+          ⬇️ Install App — Free
+        </button>
+      </div>
+    </div>
+    <!-- iOS manual hint (shown on iOS where beforeinstallprompt is unavailable) -->
+    <div class="pwa-ios-hint" id="pwaIosHint">
+      <strong>On iPhone / iPad:</strong> Tap <strong>Share</strong> (□↑) in Safari → <strong>Add to Home Screen</strong> → tap <strong>Add</strong>
+    </div>
+  </div>
+
   <div class="dash-stats" id="dashStats">
     <div class="dstat"><div class="dstat-val" id="ds-fam">0</div><div class="dstat-lbl">Family Members</div></div>
     <div class="dstat"><div class="dstat-val" id="ds-ritu">—</div><div class="dstat-lbl">Current Ritu</div></div>
@@ -717,26 +756,71 @@ let SESSION_TOKENS = 0, SESSION_CALLS = 0;
 let deferredPWAPrompt = null;
 
 /* ═══════════ PWA ═══════════ */
+// Detect platform
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+  || window.navigator.standalone === true;
+
+// Register service worker
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => { console.log('[AK] SW registered', reg.scope); })
+      .catch(err => { console.log('[AK] SW failed', err); });
   });
 }
-window.addEventListener('beforeinstallprompt', e=>{
-  e.preventDefault();
-  deferredPWAPrompt = e;
-  const banner = document.getElementById('pwaBanner');
-  if(banner) banner.classList.add('show');
-});
-window.addEventListener('appinstalled', ()=>{
+
+function showPwaHero(){
+  const hero = document.getElementById('pwaHero');
+  if(hero) hero.classList.add('show');
+}
+function hidePwaHero(){
+  const hero = document.getElementById('pwaHero');
+  if(hero) hero.classList.remove('show');
   const banner = document.getElementById('pwaBanner');
   if(banner) banner.classList.remove('show');
+}
+
+// Already installed — hide everything
+if(isInStandaloneMode){
+  // nothing to show
+} else if(isIos){
+  // iOS: no beforeinstallprompt — show hero with manual instructions
+  showPwaHero();
+  const iosHint = document.getElementById('pwaIosHint');
+  if(iosHint) iosHint.classList.add('show');
+  // Hide the install button since we can't trigger native prompt on iOS
+  const btn = document.getElementById('pwaInstallBig');
+  if(btn){ btn.style.display='none'; }
+} else {
+  // Android/Chrome/Edge — wait for beforeinstallprompt
+  window.addEventListener('beforeinstallprompt', e=>{
+    e.preventDefault();
+    deferredPWAPrompt = e;
+    showPwaHero();
+    // Also show small Share tab banner
+    const banner = document.getElementById('pwaBanner');
+    if(banner) banner.classList.add('show');
+  });
+}
+
+window.addEventListener('appinstalled', ()=>{
+  hidePwaHero();
   deferredPWAPrompt = null;
 });
+
 function pwaInstall(){
-  if(!deferredPWAPrompt) return;
+  if(!deferredPWAPrompt){
+    // Fallback: if on iOS show hint, else nothing
+    const iosHint = document.getElementById('pwaIosHint');
+    if(iosHint) iosHint.classList.add('show');
+    return;
+  }
   deferredPWAPrompt.prompt();
-  deferredPWAPrompt.userChoice.then(()=>{ deferredPWAPrompt=null; });
+  deferredPWAPrompt.userChoice.then(choice=>{
+    if(choice.outcome === 'accepted') hidePwaHero();
+    deferredPWAPrompt = null;
+  });
 }
 
 /* ═══════════ PROVIDER ═══════════ */
@@ -914,7 +998,10 @@ function tick(){
   setText('ds-fam', FAM.length);
   // Update masthead city dynamically
   const mastCity = document.getElementById('mastCity');
-  if(mastCity && LOC.city) mastCity.textContent = LOC.city;
+  if(mastCity){
+    if(LOC.city) mastCity.textContent = LOC.city;
+    else if(!GEO_RESOLVING) mastCity.textContent = '📍 Set location →';
+  }
   setText('ds-ritu', ritu.icon);
   const aqiStat = document.getElementById('ds-aqi');
   if(aqiStat){
@@ -1101,11 +1188,17 @@ async function autoDetectLocation(silent=false){
         let aqiVal = '';
         try {
           const aqiRes = await fetch(
-            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=pm2_5,european_aqi`
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current=pm2_5,us_aqi`
           );
           const aqiJson = await aqiRes.json();
-          if(aqiJson.current?.european_aqi != null){
-            aqiVal = Math.round(aqiJson.current.european_aqi);
+          if(aqiJson.current?.us_aqi != null){
+            aqiVal = Math.round(aqiJson.current.us_aqi);
+          } else if(aqiJson.current?.pm2_5 != null){
+            // Fallback: convert PM2.5 µg/m³ to US AQI (EPA linear interpolation)
+            const pm = aqiJson.current.pm2_5;
+            const bp = [[0,12,0,50],[12.1,35.4,51,100],[35.5,55.4,101,150],[55.5,150.4,151,200],[150.5,250.4,201,300],[250.5,350.4,301,400],[350.5,500.4,401,500]];
+            const seg = bp.find(b=>pm>=b[0]&&pm<=b[1]);
+            if(seg) aqiVal = Math.round(((seg[3]-seg[2])/(seg[1]-seg[0]))*(pm-seg[0])+seg[2]);
           }
         } catch(e){ /* AQI API unavailable — keep manual value */ }
 
@@ -1142,6 +1235,10 @@ async function autoDetectLocation(silent=false){
           locNote.style.color = '#27500A';
           locNote.style.display = 'block';
         }
+
+        // Refresh masthead city
+        const mc = document.getElementById('mastCity');
+        if(mc) mc.textContent = city;
 
         // Refresh AI insight now we have real location
         loadDashAi();
@@ -1181,7 +1278,11 @@ function saveLoc(){
   LOC.aqi      = document.getElementById('inAqi').value   || '';
   LOC.resolved = !!(LOC.city); // mark resolved when manually entered
   localStorage.setItem('ak2_loc', JSON.stringify(LOC));
-  if(LOC.city) setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
+  if(LOC.city){
+    setText('ctxCity', `${LOC.city}${LOC.state?', '+LOC.state:''}`);
+    const mc = document.getElementById('mastCity');
+    if(mc) mc.textContent = LOC.city;
+  }
   tick();
 }
 
@@ -1767,13 +1868,13 @@ async function loadDashAi(){
     el.innerHTML=`<div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:.5rem .85rem;font-size:.75rem;color:#633806;margin-bottom:.5rem">
       ⚠️ <b>Static tip</b> — Add an API key in the <b>Share</b> tab for live daily AI recommendations personalised to your family.
     </div>
-    <span style="color:var(--text)">In <b>${ritu.name}</b> season in ${LOC.city||'Ahmedabad'}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration — your roti already has Jowar and Coconut powder doing the heavy lifting':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni — the saunth and ajwain in your monsoon roti are the fix':ritu.id==='autumn'?'Ojas building — Chyawanprash every morning and 2 fresh amla daily alongside your roti':'warming sesame and black pepper for Kapha, turmeric increased to ¾ tsp for AQI 150–200 lung protection'}.</span>
+    <span style="color:var(--text)">In <b>${ritu.name}</b> season in ${LOC.city||'your city'}, focus on ${ritu.id==='summer'?'cooling foods and coconut water hydration — your roti already has Jowar and Coconut powder doing the heavy lifting':ritu.id==='monsoon'?'warm freshly cooked food and strong Agni — the saunth and ajwain in your monsoon roti are the fix':ritu.id==='autumn'?'Ojas building — Chyawanprash every morning and 2 fresh amla daily alongside your roti':'warming sesame and black pepper for Kapha, turmeric increased to ¾ tsp for AQI 150–200 lung protection'}.</span>
     <a href="#" onclick="showTab('share');return false" style="color:var(--saffron);margin-left:.4rem;font-size:.78rem">→ Add API key</a>`;
     return;
   }
   el.innerHTML=`<span style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.82rem"><span class="spinner"></span> ${provLabel} Loading personalised insight…</span>`;
   try{
-    const prompt=`Today: ${today}. City: ${LOC.city||'Ahmedabad'}, ${LOC.state||'Gujarat'}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`;
+    const prompt=`Today: ${today}. City: ${LOC.city||'your city'}, ${LOC.state||''}. AQI: ${LOC.aqi||'unknown'}. Season: ${ritu.name}. Family: ${famSum}. Give ONE specific, practical holistic health tip for today combining Ayurveda and modern nutrition. Reference the season and city conditions. 75 words max. Warm, expert tone. No bullet points.`;
     const text = await callAI({prompt, maxTokens:280});
     el.innerHTML = (text||`Today in ${ritu.name}: ${ritu.principle.substring(0,120)}…`)
       + ` <span style="font-size:.65rem;color:var(--muted);opacity:.6">[${provider==='openrouter'?'OpenRouter · free':'Claude'}]</span>`;
