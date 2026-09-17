@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb — आरोग्य कुटुम्ब v11</title>
+<title>Arogya Kutumb — आरोग्य कुटुम्ब v12</title>
 <meta name="description" content="Holistic family health — Ayurveda, seasonal nutrition, roti calculator, habit tracker for Ahmedabad families.">
 <meta name="theme-color" content="#1A1005">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -344,13 +344,14 @@ input:focus,select:focus{border-color:var(--saffron)}
 <!-- ══════════ DASHBOARD ══════════ -->
 <div class="sec act" id="sec-dash">
 
-  <!-- PWA Install Card — shown until installed -->
+  <!-- PWA Install Card — shown until installed or dismissed -->
   <div class="pwa-hero" id="pwaHero">
+    <button onclick="pwaDismiss()" style="position:absolute;top:.6rem;right:.75rem;background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:24px;height:24px;font-size:.8rem;cursor:pointer;line-height:24px;padding:0">✕</button>
     <div class="pwa-hero-inner">
       <div class="pwa-hero-icon">📲</div>
       <div class="pwa-hero-text">
-        <h3>Install Arogya Kutumb as an App</h3>
-        <p>Get instant access from your home screen — no app store, no login, works offline for family data, roti calculator &amp; habit tracker.</p>
+        <h3>Add to Home Screen — Free App</h3>
+        <p>One tap to install. Opens instantly, works offline for family data, roti calculator &amp; habit tracker. No app store. No login.</p>
         <div class="pwa-hero-features">
           <span class="pwa-hero-feat">⚡ Instant launch</span>
           <span class="pwa-hero-feat">📶 Works offline</span>
@@ -362,9 +363,9 @@ input:focus,select:focus{border-color:var(--saffron)}
         </button>
       </div>
     </div>
-    <!-- iOS manual hint (shown on iOS where beforeinstallprompt is unavailable) -->
+    <!-- iOS Safari manual instructions -->
     <div class="pwa-ios-hint" id="pwaIosHint">
-      <strong>On iPhone / iPad:</strong> Tap <strong>Share</strong> (□↑) in Safari → <strong>Add to Home Screen</strong> → tap <strong>Add</strong>
+      <strong>On iPhone / iPad (Safari):</strong> Tap <strong>Share ↑</strong> at the bottom → <strong>"Add to Home Screen"</strong> → tap <strong>Add</strong>. Done — app opens like any other app.
     </div>
   </div>
 
@@ -389,6 +390,57 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="ai-box">
     <div class="ai-hdr"><span class="ai-badge">AI</span><span class="ai-title">Today's personalised holistic recommendation</span></div>
     <div class="ai-body" id="dashAi"><span class="spinner"></span> Loading…</div>
+  </div>
+
+  <!-- ── How to use Arogya Kutumb (onboarding guide) ── -->
+  <div class="card" id="onboardCard" style="margin-top:.5rem;border:1.5px solid var(--autumn-b)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem">
+      <div class="ct" style="margin:0">🗺️ How to use Arogya Kutumb</div>
+      <button onclick="toggleOnboard()" id="onboardToggle" style="font-size:.72rem;padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--cream);color:var(--muted);cursor:pointer">Hide</button>
+    </div>
+    <div id="onboardBody">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.65rem;margin-bottom:1rem">
+        <!-- Step 1 -->
+        <div onclick="showTab('family')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">👨‍👩‍👧</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">1 · Family Setup</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Add each member's name, age, weight &amp; Prakriti (body type). The app personalises everything around them.</div>
+        </div>
+        <!-- Step 2 -->
+        <div onclick="showTab('family')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">📍</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">2 · Set Location</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Tap "Live detect" to get your city &amp; live AQI. Used for season-specific and air quality nutrition tips.</div>
+        </div>
+        <!-- Step 3 -->
+        <div onclick="showTab('roti')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">🫓</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">3 · Roti Calculator</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Get your family's exact seasonal roti recipe — flour ratios, ghee, spices — calculated for your Prakriti.</div>
+        </div>
+        <!-- Step 4 -->
+        <div onclick="showTab('tracker')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">✅</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">4 · Daily Tracker</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Check off daily Ayurvedic habits — water, walk, sleep, supplements. Builds a streak that keeps you consistent.</div>
+        </div>
+        <!-- Step 5 -->
+        <div onclick="showTab('seasonal')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">🌿</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">5 · Seasonal Guide</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Full Ritu-specific dos &amp; don'ts for your current season — foods, timing, Ayurvedic herbs.</div>
+        </div>
+        <!-- Step 6 -->
+        <div onclick="showTab('rashifal')" style="cursor:pointer;background:var(--mist);border-radius:10px;padding:.75rem;border:1px solid var(--border);transition:box-shadow .12s" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,.08)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:1.4rem;margin-bottom:.3rem">⭐</div>
+          <div style="font-weight:600;font-size:.8rem;color:var(--earth);margin-bottom:.2rem">6 · Rashifal</div>
+          <div style="font-size:.72rem;color:var(--muted);line-height:1.5">Daily Vedic reading for your Rashi — health tip, auspicious time, Sanskrit phrase. Powered by AI.</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(90deg,#FFF7E6,#FFFDF7);border:1px solid #FAC775;border-radius:8px;padding:.6rem .85rem;font-size:.75rem;color:#633806">
+        💡 <strong>Tip:</strong> Start with <strong>Family Setup</strong> → tap <strong>Live detect</strong> for location → come back here for your AI daily tip. The whole app runs in your browser — zero login, zero data shared.
+      </div>
+    </div>
   </div>
 </div>
 
@@ -507,7 +559,7 @@ input:focus,select:focus{border-color:var(--saffron)}
         <span id="rCountDisplay" style="font-size:.85rem;font-weight:600;color:var(--saffron)">12 rotis selected</span>
       </div>
     </div>
-    <input type="hidden" id="rCount" value="12">
+    <input type="hidden" id="rCount" value="">
 
     <!-- ROW 2: Season auto or manual -->
     <div style="margin-bottom:1rem">
@@ -738,7 +790,7 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="f-text">
     आहारः प्राणिनां प्राणः — Food is the life-force of all living beings.<br>
     Ayurvedic wisdom · Modern nutrition science · Zero server · Zero tracking · Your data stays on your device.<br>
-    <span style="opacity:.35">v10 · PWA · Multi-provider AI</span>
+    <span style="opacity:.35">V1.0 AI Integrated</span>
   </div>
 </div>
 
@@ -756,17 +808,15 @@ let SESSION_TOKENS = 0, SESSION_CALLS = 0;
 let deferredPWAPrompt = null;
 
 /* ═══════════ PWA ═══════════ */
-// Detect platform
 const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
   || window.navigator.standalone === true;
 
-// Register service worker
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('sw.js')
-      .then(reg => { console.log('[AK] SW registered', reg.scope); })
-      .catch(err => { console.log('[AK] SW failed', err); });
+      .then(reg => console.log('[AK] SW registered', reg.scope))
+      .catch(err => console.log('[AK] SW failed', err));
   });
 }
 
@@ -779,35 +829,70 @@ function hidePwaHero(){
   if(hero) hero.classList.remove('show');
   const banner = document.getElementById('pwaBanner');
   if(banner) banner.classList.remove('show');
+  localStorage.setItem('ak_pwa_dismissed','1');
 }
 
-// Already installed — hide everything
-if(isInStandaloneMode){
-  // nothing to show
-} else if(isIos){
-  // iOS: no beforeinstallprompt — show hero with manual instructions
+// Show card unless already running as installed app or user previously dismissed
+if(!isInStandaloneMode && !localStorage.getItem('ak_pwa_dismissed')){
   showPwaHero();
-  const iosHint = document.getElementById('pwaIosHint');
-  if(iosHint) iosHint.classList.add('show');
-  // Hide the install button since we can't trigger native prompt on iOS
-  const btn = document.getElementById('pwaInstallBig');
-  if(btn){ btn.style.display='none'; }
-} else {
-  // Android/Chrome/Edge — wait for beforeinstallprompt
-  window.addEventListener('beforeinstallprompt', e=>{
-    e.preventDefault();
-    deferredPWAPrompt = e;
-    showPwaHero();
-    // Also show small Share tab banner
-    const banner = document.getElementById('pwaBanner');
-    if(banner) banner.classList.add('show');
-  });
+  if(isIos){
+    // iOS: show manual Share instructions, hide install button
+    const iosHint = document.getElementById('pwaIosHint');
+    if(iosHint) iosHint.classList.add('show');
+    const btn = document.getElementById('pwaInstallBig');
+    if(btn) btn.style.display = 'none';
+  }
 }
 
-window.addEventListener('appinstalled', ()=>{
+// Android/Chrome: capture native install prompt when it fires
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPWAPrompt = e;
+  // Ensure card visible (in case dismissed flag was set before prompt was available)
+  if(!isInStandaloneMode && !localStorage.getItem('ak_pwa_dismissed')) showPwaHero();
+  const banner = document.getElementById('pwaBanner');
+  if(banner) banner.classList.add('show');
+});
+
+window.addEventListener('appinstalled', () => {
   hidePwaHero();
   deferredPWAPrompt = null;
 });
+
+function pwaInstall(){
+  if(deferredPWAPrompt){
+    deferredPWAPrompt.prompt();
+    deferredPWAPrompt.userChoice.then(choice => {
+      if(choice.outcome === 'accepted') hidePwaHero();
+      deferredPWAPrompt = null;
+    });
+  } else {
+    // No native prompt yet — show iOS hint or generic instruction
+    const iosHint = document.getElementById('pwaIosHint');
+    if(iosHint) iosHint.classList.add('show');
+    const btn = document.getElementById('pwaInstallBig');
+    if(btn){ btn.textContent = '📖 See instructions above'; btn.style.background='#cde9b8'; }
+  }
+}
+function pwaDismiss(){
+  hidePwaHero();
+}
+
+function toggleOnboard(){
+  const body = document.getElementById('onboardBody');
+  const btn  = document.getElementById('onboardToggle');
+  const key  = 'ak_onboard_hidden';
+  if(!body) return;
+  if(body.style.display==='none'){
+    body.style.display='';
+    if(btn) btn.textContent='Hide';
+    localStorage.removeItem(key);
+  } else {
+    body.style.display='none';
+    if(btn) btn.textContent='Show guide';
+    localStorage.setItem(key,'1');
+  }
+}
 
 function pwaInstall(){
   if(!deferredPWAPrompt){
@@ -918,6 +1003,14 @@ async function callAI({prompt, maxTokens=350}){
 
 /* ═══════════ BOOT ═══════════ */
 window.onload = ()=>{
+  // Restore onboarding card collapsed state
+  if(localStorage.getItem('ak_onboard_hidden')){
+    const ob = document.getElementById('onboardBody');
+    const obt = document.getElementById('onboardToggle');
+    if(ob)  ob.style.display = 'none';
+    if(obt) obt.textContent  = 'Show guide';
+  }
+
   // Always auto-detect location on every load
   // Show saved location immediately as placeholder while GPS runs
   if(LOC.city){
@@ -1029,7 +1122,7 @@ const RITU_DATA = {
     herbs:['Flaxseed 12g','Methi 5g','Pumpkin seed 8g','Turmeric ½ tsp','Ajwain+Hing pinch','Iodized sendha salt ¾ tsp'],
     wet:{Milk:'200–220ml (boiling hot)','Ghee in dough':'1 tbsp (increased for Pitta)','Finishing smear':'1 dot per roti'},
     alongside:['Coconut water mid-morning — Mg+K+Na lost in 45°C sweat','Fresh amla / lemon water with lunch — Vitamin C triples iron absorption','Chaas (spiced buttermilk) post-lunch — Pitta-cooling + probiotics','2 Brazil nuts at breakfast — full daily Selenium'],
-    dos:['Jowar 90g as lead flour — Charaka Samhita classifies it Sheeta (cooling), the ideal Grishma millet','Ghee 1 tbsp in dough — single most effective Pitta-pacifier in Ayurveda; carries fat-soluble nutrients','Coconut powder 27g — cooling MCT fats, electrolytes, prevents dehydration-related fatigue','Coconut water mid-morning every day — replenishes Mg, K, Na lost through 40–45°C sweating','Fresh amla or lemon water with every lunch — Vitamin C triples non-heme iron absorption','Morning walk 6:00–6:30 AM before roti prep — free 1,500–2,000 IU Vitamin D3 from Ahmedabad sun','Chaas (spiced buttermilk) post-lunch — probiotics + Pitta-cooling + digestive enzyme support','Cook on HIGH heat only, 25–30 sec per side — turmeric burns bitter on low heat, ruins benefit','Apply ghee immediately off tawa — activates turmeric curcumin, Omega-3, Vitamin A (all fat-soluble)','Store in cotton cloth inside steel dabba — stays perfectly soft for 6+ hours in any heat'],
+    dos:['Jowar 90g as lead flour — Charaka Samhita classifies it Sheeta (cooling), the ideal Grishma millet','Ghee 1 tbsp in dough — single most effective Pitta-pacifier in Ayurveda; carries fat-soluble nutrients','Coconut powder 27g — cooling MCT fats, electrolytes, prevents dehydration-related fatigue','Coconut water mid-morning every day — replenishes Mg, K, Na lost through 40–45°C sweating','Fresh amla or lemon water with every lunch — Vitamin C triples non-heme iron absorption','Morning walk 6:00–6:30 AM before roti prep — free 1,500–2,000 IU Vitamin D3 from sun','Chaas (spiced buttermilk) post-lunch — probiotics + Pitta-cooling + digestive enzyme support','Cook on HIGH heat only, 25–30 sec per side — turmeric burns bitter on low heat, ruins benefit','Apply ghee immediately off tawa — activates turmeric curcumin, Omega-3, Vitamin A (all fat-soluble)','Store in cotton cloth inside steel dabba — stays perfectly soft for 6+ hours in any heat'],
     donts:['Do NOT use 72g Bajra in summer — Ushna (heating) nature worsens Pitta in 45°C Ahmedabad heat','Do NOT use 72g Soya — Ushna + goitrogenic; compounds thyroid suppression risk for female especially','Do NOT add chilli, black pepper, or garam masala to summer rotis — extreme Pitta aggravation','Do NOT cook on low heat — moisture evaporates, roti hardens within 1 hour, turmeric turns bitter and toxic','Do NOT skip ghee finishing smear — Omega-3, curcumin, Vitamin A lose 60–70% bioavailability without fat','Do NOT add honey to hot milk — Ayurvedic texts: honey above 40°C becomes Ama (metabolic toxin)','Do NOT skip morning walk — Vitamin D3 is heat-sensitive; sun is the only practical vegetarian source','Do NOT eat leftover rotis after 6 hours in summer — millet content spoils rapidly at 40°C+']},
 
   monsoon:{id:'monsoon',name:'Varsha (Monsoon)',icon:'🌧️',period:'July – September',temp:'28–35°C, High humidity',dosha:'Vata + Pitta ↑',
@@ -1069,7 +1162,7 @@ const RITU_DATA = {
     wet:{Milk:'210–230ml (boiling hot — most of all seasons)','Ghee in dough':'1 tbsp (Vata lubricant for winter dryness)','Finishing smear':'generous dot per roti'},
     alongside:['Tulsi + ginger + black pepper tea every morning — AQI 150–200 lung protection + anti-viral','Til (sesame) laddoos mid-morning — Makar Sankranti tradition = nutritionally validated for Hemant','Warm lemon water (NOT cold) with lunch — Vitamin C + iron absorption; always warm in winter','2 Brazil nuts at breakfast — Selenium; peak immunity need in winter respiratory infection season'],
     dos:['Bajra 90g as lead flour — warmest millet, highest Mg + iron, the traditional Gujarati winter staple','Sesame (til) powder 15g in dough — Calcium + warming + Kapha↓ + winter joint protection; the Hemant superfood','Black pepper ½ tsp — piperine boosts ALL other herb and nutrient absorption by 20% (proven clinically)','Dry ginger (saunth) ¼ tsp — essential for Ahmedabad AQI 150–200 lung protection and anti-inflammation','Turmeric increased to ¾ tsp — black pepper synergy creates 2000× better curcumin bioavailability','Tulsi + ginger + black pepper tea every morning — respiratory armor against winter Ahmedabad AQI','Til laddoos as mid-morning snack — Makar Sankranti tradition is clinically nutritionally validated','Use jaggery (gur) in night milk instead of honey — warming quality of jaggery is superior in winter'],
-    donts:["Do NOT skip sesame (til) — Ahmedabad winters cause joint stiffness; til is the traditional nutritional fix","Do NOT use cold milk or cold water in dough — instantly weakens winter Agni and makes millet brittle","Do NOT skip black pepper — piperine multiplies the value of every other herb in the entire recipe","Do NOT eat summer cooling foods (cold coconut water, raw cucumber, cold salads) — increases Kapha","Do NOT skip morning walk — Ahmedabad winter sun is mild but it is the only free Vitamin D3 source","Do NOT eat after 8 PM — late eating freezes Agni when the body needs to rest and repair overnight","Do NOT reduce ghee — primary Vata lubricant preventing winter joint dryness and skin cracking","Do NOT ignore high AQI days — AQI > 200: add extra ¼ tsp turmeric to morning milk as well"]}
+    donts:["Do NOT skip sesame (til) — Ahmedabad winters cause joint stiffness; til is the traditional nutritional fix","Do NOT use cold milk or cold water in dough — instantly weakens winter Agni and makes millet brittle","Do NOT skip black pepper — piperine multiplies the value of every other herb in the entire recipe","Do NOT eat summer cooling foods (cold coconut water, raw cucumber, cold salads) — increases Kapha","Do NOT skip morning walk — winter sun is mild but it is the only free Vitamin D3 source","Do NOT eat after 8 PM — late eating freezes Agni when the body needs to rest and repair overnight","Do NOT reduce ghee — primary Vata lubricant preventing winter joint dryness and skin cracking","Do NOT ignore high AQI days — AQI > 200: add extra ¼ tsp turmeric to morning milk as well"]}
 };
 
 function getRitu(month){
@@ -1683,7 +1776,7 @@ function updateQuote(d){
 
 /* ═══════════ HABITS ═══════════ */
 const HMASTER=[
-  {id:'walk',icon:'🚶',n:'Morning walk (20 min)',w:'Free Vitamin D3 · Kapha management · Ahmedabad sun 6–7 AM'},
+  {id:'walk',icon:'🚶',n:'Morning walk (20 min)',w:'Free Vitamin D3 · Kapha management ·  6–7 AM'},
   {id:'roti',icon:'🫓',n:'Multivitamin rotis prepared',w:'18 nutrients · seasonal formula · B-complex + iron + fiber + Omega-3'},
   {id:'lemon',icon:'🍋',n:'Lemon water / amla with lunch',w:'Vitamin C · 3× iron absorption from roti · antioxidant protection'},
   {id:'nmilk',icon:'🌙',n:'Night milk at 9:30 PM',w:'Ashwagandha / Shatavari · hormone support · Ojas building'},
