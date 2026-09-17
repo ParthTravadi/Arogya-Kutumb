@@ -341,58 +341,7 @@ input:focus,select:focus{border-color:var(--saffron)}
   </div>
 </div>
 
-<!-- ══════════ DASHBOARD ══════════ -->
-<div class="sec act" id="sec-dash">
-
-  <!-- PWA Install Card — shown until installed or dismissed -->
-  <div class="pwa-hero" id="pwaHero">
-    <button onclick="pwaDismiss()" style="position:absolute;top:.6rem;right:.75rem;background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:24px;height:24px;font-size:.8rem;cursor:pointer;line-height:24px;padding:0">✕</button>
-    <div class="pwa-hero-inner">
-      <div class="pwa-hero-icon">📲</div>
-      <div class="pwa-hero-text">
-        <h3>Add to Home Screen — Free App</h3>
-        <p>One tap to install. Opens instantly, works offline for family data, roti calculator &amp; habit tracker. No app store. No login.</p>
-        <div class="pwa-hero-features">
-          <span class="pwa-hero-feat">⚡ Instant launch</span>
-          <span class="pwa-hero-feat">📶 Works offline</span>
-          <span class="pwa-hero-feat">🔒 No tracking</span>
-          <span class="pwa-hero-feat">🆓 Free forever</span>
-        </div>
-        <button class="pwa-install-big" id="pwaInstallBig" onclick="pwaInstall()">
-          ⬇️ Install App — Free
-        </button>
-      </div>
-    </div>
-    <!-- iOS Safari manual instructions -->
-    <div class="pwa-ios-hint" id="pwaIosHint">
-      <strong>On iPhone / iPad (Safari):</strong> Tap <strong>Share ↑</strong> at the bottom → <strong>"Add to Home Screen"</strong> → tap <strong>Add</strong>. Done — app opens like any other app.
-    </div>
-  </div>
-
-  <div class="dash-stats" id="dashStats">
-    <div class="dstat"><div class="dstat-val" id="ds-fam">0</div><div class="dstat-lbl">Family Members</div></div>
-    <div class="dstat"><div class="dstat-val" id="ds-ritu">—</div><div class="dstat-lbl">Current Ritu</div></div>
-    <div class="dstat"><div class="dstat-val" id="ds-aqi">—</div><div class="dstat-lbl">AQI Today</div></div>
-    <div class="dstat"><div class="dstat-val" id="ds-streak">0🔥</div><div class="dstat-lbl">Habit Streak</div></div>
-  </div>
-
-  <div class="card" id="rituDashCard" style="margin-bottom:1rem">
-    <div class="ct">🌿 Today — <span id="rituDashName">Loading…</span></div>
-    <div id="rituDashBody">Loading ritu information…</div>
-  </div>
-
-  <div id="dashFamCards" class="card" style="margin-bottom:1rem">
-    <div class="ct">👪 Your family at a glance</div>
-    <div id="dashFamGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem">
-      <div style="text-align:center;padding:1.25rem;border:2px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;cursor:pointer" onclick="showTab('family')">➕ Add family members in Family Setup</div>
-    </div>
-  </div>
-  <div class="ai-box">
-    <div class="ai-hdr"><span class="ai-badge">AI</span><span class="ai-title">Today's personalised holistic recommendation</span></div>
-    <div class="ai-body" id="dashAi"><span class="spinner"></span> Loading…</div>
-  </div>
-
-  <!-- ── How to use Arogya Kutumb (onboarding guide) ── -->
+ <!-- ── How to use Arogya Kutumb (onboarding guide) ── -->
   <div class="card" id="onboardCard" style="margin-top:.5rem;border:1.5px solid var(--autumn-b)">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem">
       <div class="ct" style="margin:0">🗺️ How to use Arogya Kutumb</div>
@@ -444,6 +393,58 @@ input:focus,select:focus{border-color:var(--saffron)}
   </div>
 </div>
 
+<!-- ══════════ DASHBOARD ══════════ -->
+<div class="sec act" id="sec-dash">
+
+  <!-- PWA Install Card — shown until installed or dismissed -->
+  <div class="pwa-hero" id="pwaHero">
+    <button onclick="pwaDismiss()" style="position:absolute;top:.6rem;right:.75rem;background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:24px;height:24px;font-size:.8rem;cursor:pointer;line-height:24px;padding:0">✕</button>
+    <div class="pwa-hero-inner">
+      <div class="pwa-hero-icon">📲</div>
+      <div class="pwa-hero-text">
+        <h3>Add to Home Screen — Free App</h3>
+        <p>One tap to install. Opens instantly, works offline for family data, roti calculator &amp; habit tracker. No app store. No login.</p>
+        <div class="pwa-hero-features">
+          <span class="pwa-hero-feat">⚡ Instant launch</span>
+          <span class="pwa-hero-feat">📶 Works offline</span>
+          <span class="pwa-hero-feat">🔒 No tracking</span>
+          <span class="pwa-hero-feat">🆓 Free forever</span>
+        </div>
+        <button class="pwa-install-big" id="pwaInstallBig" onclick="pwaInstall()">
+          ⬇️ Install App — Free
+        </button>
+      </div>
+    </div>
+    <!-- iOS Safari manual instructions -->
+    <div class="pwa-ios-hint" id="pwaIosHint">
+      <strong>On iPhone / iPad (Safari):</strong> Tap <strong>Share ↑</strong> at the bottom → <strong>"Add to Home Screen"</strong> → tap <strong>Add</strong>. Done — app opens like any other app.
+    </div>
+  </div>
+
+  <div class="dash-stats" id="dashStats">
+    <div class="dstat"><div class="dstat-val" id="ds-fam">0</div><div class="dstat-lbl">Family Members</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-ritu">—</div><div class="dstat-lbl">Current Ritu</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-aqi">—</div><div class="dstat-lbl">AQI Today</div></div>
+    <div class="dstat"><div class="dstat-val" id="ds-streak">0🔥</div><div class="dstat-lbl">Habit Streak</div></div>
+  </div>
+
+  <div class="card" id="rituDashCard" style="margin-bottom:1rem">
+    <div class="ct">🌿 Today — <span id="rituDashName">Loading…</span></div>
+    <div id="rituDashBody">Loading ritu information…</div>
+  </div>
+
+  <div id="dashFamCards" class="card" style="margin-bottom:1rem">
+    <div class="ct">👪 Your family at a glance</div>
+    <div id="dashFamGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem">
+      <div style="text-align:center;padding:1.25rem;border:2px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.82rem;cursor:pointer" onclick="showTab('family')">➕ Add family members in Family Setup</div>
+    </div>
+  </div>
+  <div class="ai-box">
+    <div class="ai-hdr"><span class="ai-badge">AI</span><span class="ai-title">Today's personalised holistic recommendation</span></div>
+    <div class="ai-body" id="dashAi"><span class="spinner"></span> Loading…</div>
+  </div>
+
+ 
 <!-- ══════════ FAMILY SETUP ══════════ -->
 <div class="sec" id="sec-family">
   <div class="setup-hero">
