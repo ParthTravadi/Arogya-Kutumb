@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arogya Kutumb - आरोग्य कुटुम्ब v15</title>
+<title>Arogya Kutumb - आरोग्य कुटुम्ब</title>
 <meta name="description" content="Holistic family health - Ayurveda, seasonal nutrition, roti calculator, habit tracker for Ahmedabad families.">
 <meta name="theme-color" content="#1A1005">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -255,11 +255,7 @@ input:focus,select:focus{border-color:var(--saffron)}
 .pwa-install-big{background:white;color:#1A4A0A;border:none;border-radius:20px;padding:.42rem 1.1rem;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
 .pwa-ios-hint{display:none;width:100%;font-size:.72rem;opacity:.88;margin-top:.3rem;padding-top:.3rem;border-top:1px solid rgba(255,255,255,.2)}
 .pwa-ios-hint.show{display:block}
-/* ONBOARD GUIDE */
-.onboard-wrap{display:none;background:var(--mist);border-bottom:2px solid var(--autumn-b)}
-.onboard-wrap.show{display:block}
-.onboard-inner{max-width:900px;margin:0 auto;padding:.85rem 1rem}
-.onboard-hide-btn{font-size:.7rem;padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--cream);color:var(--muted);cursor:pointer}
+
 .ob-step{cursor:pointer;background:white;border-radius:10px;padding:.65rem;border:1px solid var(--border);transition:box-shadow .12s}
 .ob-step:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .ob-icon{font-size:1.3rem;margin-bottom:.2rem}
@@ -350,70 +346,73 @@ input:focus,select:focus{border-color:var(--saffron)}
   </div>
 </div>
 
-<!-- HOW TO USE (below quote, hidden by default, shown via guide tab) -->
-<div id="onboardCard" class="onboard-wrap">
-  <div class="onboard-inner">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem">
-      <div class="ct" style="margin:0;font-size:.95rem">🗺 How to use Arogya Kutumb</div>
-      <button onclick="toggleOnboard()" id="onboardToggle" class="onboard-hide-btn">Hide guide</button>
-    </div>
-    <div id="onboardBody">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:.55rem;margin-bottom:.8rem">
-        <div onclick="showTab('family');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">👨‍👩‍👧</div>
-          <div class="ob-title">1 - Family Setup</div>
-          <div class="ob-desc">Add each member's name, age, weight and Prakriti. The app personalises everything around them.</div>
-        </div>
-        <div onclick="showTab('family');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">📍</div>
-          <div class="ob-title">2 - Set Location</div>
-          <div class="ob-desc">Tap Live detect to get your city and live AQI. Used for season-specific nutrition tips.</div>
-        </div>
-        <div onclick="showTab('roti');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">🫓</div>
-          <div class="ob-title">3 - Roti Calculator</div>
-          <div class="ob-desc">Your family's seasonal roti recipe: flour ratios, ghee, spices, calculated for your Prakriti.</div>
-        </div>
-        <div onclick="showTab('tracker');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">✅</div>
-          <div class="ob-title">4 - Daily Tracker</div>
-          <div class="ob-desc">Check off daily Ayurvedic habits: water, walk, sleep, supplements. Builds a streak.</div>
-        </div>
-        <div onclick="showTab('seasons');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">🌿</div>
-          <div class="ob-title">5 - Seasonal Guide</div>
-          <div class="ob-desc">Ritu-specific dos and don'ts: foods, timing, Ayurvedic herbs for your current season.</div>
-        </div>
-        <div onclick="showTab('rashifal');toggleOnboard()" class="ob-step">
-          <div class="ob-icon">⭐</div>
-          <div class="ob-title">6 - Rashifal</div>
-          <div class="ob-desc">Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase.</div>
-        </div>
-      </div>
-      <div class="ob-tip">Start with <strong>Family Setup</strong>, tap <strong>Live detect</strong> for location, then return to Dashboard for your AI daily tip. Everything runs in your browser - zero login, zero data shared.</div>
-    </div>
-  </div>
-</div>
 
-<!-- NAV -->
+
+<!-- NAV --><!-- NAV -->
 <div class="nav-wrap">
   <div class="nav">
-    <button class="nb act" onclick="showTab('dash')">🏠 Dashboard</button>
-    <button class="nb" onclick="showTab('family')">👪 Family Setup</button>
-    <button class="nb" onclick="showTab('roti')">🫓 Roti Calculator</button>
-    <button class="nb" onclick="showTab('seasons')">🍃 Seasonal Guide</button>
-    <button class="nb" onclick="showTab('tracker')">✅ Daily Tracker</button>
-    <button class="nb" onclick="showTab('mantra')">🕉 Mantra</button>
-    <button class="nb" onclick="showTab('rashifal')">⭐ Rashifal</button>
-    <button class="nb" onclick="showTab('share')">🚀 Share</button>
-    <button class="nb" onclick="toggleOnboard()" id="guideNavBtn" style="background:var(--autumn-b);color:var(--earth);font-weight:600">🗺 Guide</button>
+    <button class="nb act" id="nb-guide" onclick="showTab('guide')">🗺 Guide</button>
+    <button class="nb" id="nb-dash" onclick="showTab('dash')">🏠 Dashboard</button>
+    <button class="nb" id="nb-family" onclick="showTab('family')">👪 Family Setup</button>
+    <button class="nb" id="nb-roti" onclick="showTab('roti')">🫓 Roti Calculator</button>
+    <button class="nb" id="nb-seasons" onclick="showTab('seasons')">🍃 Seasonal Guide</button>
+    <button class="nb" id="nb-tracker" onclick="showTab('tracker')">✅ Daily Tracker</button>
+    <button class="nb" id="nb-mantra" onclick="showTab('mantra')">🕉 Mantra</button>
+    <button class="nb" id="nb-rashifal" onclick="showTab('rashifal')">⭐ Rashifal</button>
+    <button class="nb" id="nb-share" onclick="showTab('share')">🚀 Share</button>
   </div>
 </div>
 
+</div>
+
+<!-- ══════════ GUIDE ══════════ -->
+<div class="sec act" id="sec-guide">
+  <div class="card" style="border:1.5px solid var(--autumn-b);margin-bottom:1rem">
+    <div class="ct" style="margin-bottom:.85rem">🗺 How to use Arogya Kutumb</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-bottom:.9rem">
+      <div onclick="showTab('family')" class="ob-step">
+        <div class="ob-icon">👨‍👩‍👧</div>
+        <div class="ob-title">1 - Family Setup</div>
+        <div class="ob-desc">Add each member's name, age, weight and Prakriti (body type). The app personalises everything around them.</div>
+      </div>
+      <div onclick="showTab('family')" class="ob-step">
+        <div class="ob-icon">📍</div>
+        <div class="ob-title">2 - Set Location</div>
+        <div class="ob-desc">Tap Live detect to get your city and live AQI. Used for season-specific and air quality nutrition tips.</div>
+      </div>
+      <div onclick="showTab('roti')" class="ob-step">
+        <div class="ob-icon">🫓</div>
+        <div class="ob-title">3 - Roti Calculator</div>
+        <div class="ob-desc">Your family's seasonal roti recipe: flour ratios, ghee, spices, calculated for your Prakriti.</div>
+      </div>
+      <div onclick="showTab('tracker')" class="ob-step">
+        <div class="ob-icon">✅</div>
+        <div class="ob-title">4 - Daily Tracker</div>
+        <div class="ob-desc">Check off daily Ayurvedic habits: water, walk, sleep, supplements. Builds a streak to keep you consistent.</div>
+      </div>
+      <div onclick="showTab('seasons')" class="ob-step">
+        <div class="ob-icon">🌿</div>
+        <div class="ob-title">5 - Seasonal Guide</div>
+        <div class="ob-desc">Ritu-specific dos and don'ts: foods, timing, Ayurvedic herbs for your current season.</div>
+      </div>
+      <div onclick="showTab('rashifal')" class="ob-step">
+        <div class="ob-icon">⭐</div>
+        <div class="ob-title">6 - Rashifal</div>
+        <div class="ob-desc">Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase. Powered by AI.</div>
+      </div>
+    </div>
+    <div class="ob-tip">Start with <strong>Family Setup</strong>, tap <strong>Live detect</strong> for location, then go to <strong>Dashboard</strong> for your AI daily tip. Everything runs in your browser - zero login, zero data shared.</div>
+  </div>
+
+  <!-- Quick start CTA -->
+  <div style="text-align:center;margin-top:.5rem">
+    <button class="btn btn-g" onclick="showTab('family')" style="margin-right:.5rem">Get Started - Family Setup</button>
+    <button class="btn" onclick="showTab('dash')" style="background:var(--cream);color:var(--earth);border:1px solid var(--border)">Go to Dashboard</button>
+  </div>
 </div>
 
 <!-- ══════════ DASHBOARD ══════════ -->
-<div class="sec act" id="sec-dash">
+<div class="sec" id="sec-dash">
 
   <div class="dash-stats" id="dashStats">
     <div class="dstat"><div class="dstat-val" id="ds-fam">0</div><div class="dstat-lbl">Family Members</div></div>
@@ -875,21 +874,6 @@ function pwaDismiss(){
   hidePwaHero();
 }
 
-function toggleOnboard(){
-  const card = document.getElementById('onboardCard');
-  const btn  = document.getElementById('onboardToggle');
-  const key  = 'ak_onboard_hidden';
-  if(!card) return;
-  const visible = card.classList.contains('show');
-  if(visible){
-    card.classList.remove('show');
-    if(btn) btn.textContent = 'Guide';
-    localStorage.setItem(key, '1');
-  } else {
-    card.classList.add('show');
-    if(btn) btn.textContent = 'Hide guide';
-    localStorage.setItem(key, '0');
-  }
 }
 
 
@@ -989,20 +973,19 @@ async function callAI({prompt, maxTokens=350}){
 
 /* ═══════════ BOOT ═══════════ */
 window.onload = ()=>{
-  // Restore onboarding card collapsed state
-  // Onboard guide: hidden by default; show only if user previously opened it
+  // Tab: Guide on first visit, last used tab on return
   {
-    const card = document.getElementById('onboardCard');
-    const btn  = document.getElementById('onboardToggle');
-    // Default: hidden. Show only if user explicitly opened (key absent = opened)
-    if(localStorage.getItem('ak_onboard_hidden') !== '0'){
-      // Keep hidden (default state, no class)
-      if(card) card.classList.remove('show');
-      if(btn)  btn.textContent = 'Guide';
-    } else {
-      if(card) card.classList.add('show');
-      if(btn)  btn.textContent = 'Hide guide';
-    }
+    const lastTab = localStorage.getItem('ak_last_tab');
+    const startTab = lastTab || 'guide';
+    // Remove all act classes set in HTML, then apply correct one
+    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+    document.querySelectorAll('.nb').forEach(b=>b.classList.remove('act'));
+    const startSec = document.getElementById('sec-'+startTab);
+    if(startSec) startSec.classList.add('act');
+    const startBtn = document.getElementById('nb-'+startTab);
+    if(startBtn) startBtn.classList.add('act');
+    if(startTab==='seasons') showSeasonAuto();
+    if(startTab==='roti'){ autoSetSeason(); calcRoti(); }
   }
 
   // Always auto-detect location on every load
@@ -1972,11 +1955,16 @@ async function loadDashAi(){
 function showTab(id){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('act'));
-  document.getElementById('sec-'+id).classList.add('act');
-  document.querySelectorAll('.nb').forEach(b=>{if(b.getAttribute('onclick')===`showTab('${id}')`)b.classList.add('act');});
+  const sec = document.getElementById('sec-'+id);
+  if(sec) sec.classList.add('act');
+  // Match by id (nb-{id}) first, fallback to onclick attr
+  const nbById = document.getElementById('nb-'+id);
+  if(nbById){ nbById.classList.add('act'); }
+  else { document.querySelectorAll('.nb').forEach(b=>{if(b.getAttribute('onclick')===`showTab('${id}')`)b.classList.add('act');}); }
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='seasons') showSeasonAuto();
   if(id==='roti'){ autoSetSeason(); calcRoti(); }
+  localStorage.setItem('ak_last_tab', id);
 }
 
 /* ═══════════ API KEY ═══════════ */
