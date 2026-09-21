@@ -370,41 +370,47 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="card" style="border:1.5px solid var(--autumn-b);margin-bottom:1rem">
     <div class="ct" style="margin-bottom:.85rem">🗺 How to use Arogya Kutumb</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-bottom:.9rem">
+
       <button onclick="showTab('family')" class="ob-step">
-        <div class="ob-icon">👨‍👩‍👧</button>
+        <div class="ob-icon">👨‍👩‍👧</div>
         <div class="ob-title">1 - Family Setup</div>
-        <div class="ob-desc">Add each member's name, age, weight and Prakriti (body type). The app personalises everything around them.</div>
-      </div>
+        <div class="ob-desc">Add each member's name, age, weight and Prakriti. The app personalises everything around them.</div>
+      </button>
+
       <button onclick="showTab('family')" class="ob-step">
-        <div class="ob-icon">📍</button>
+        <div class="ob-icon">📍</div>
         <div class="ob-title">2 - Set Location</div>
-        <div class="ob-desc">Tap Live detect to get your city and live AQI. Used for season-specific and air quality nutrition tips.</div>
-      </div>
+        <div class="ob-desc">Tap Live detect for your city and live AQI. Used for season-specific nutrition tips.</div>
+      </button>
+
       <button onclick="showTab('roti')" class="ob-step">
-        <div class="ob-icon">🫓</button>
+        <div class="ob-icon">🫓</div>
         <div class="ob-title">3 - Roti Calculator</div>
         <div class="ob-desc">Your family's seasonal roti recipe: flour ratios, ghee, spices, calculated for your Prakriti.</div>
-      </div>
+      </button>
+
       <button onclick="showTab('tracker')" class="ob-step">
-        <div class="ob-icon">✅</button>
+        <div class="ob-icon">✅</div>
         <div class="ob-title">4 - Daily Tracker</div>
-        <div class="ob-desc">Check off daily Ayurvedic habits: water, walk, sleep, supplements. Builds a streak to keep you consistent.</div>
-      </div>
+        <div class="ob-desc">Check off daily Ayurvedic habits: water, walk, sleep, supplements. Builds a streak.</div>
+      </button>
+
       <button onclick="showTab('seasons')" class="ob-step">
-        <div class="ob-icon">🌿</button>
+        <div class="ob-icon">🌿</div>
         <div class="ob-title">5 - Seasonal Guide</div>
         <div class="ob-desc">Ritu-specific dos and don'ts: foods, timing, Ayurvedic herbs for your current season.</div>
-      </div>
+      </button>
+
       <button onclick="showTab('rashifal')" class="ob-step">
-        <div class="ob-icon">⭐</button>
+        <div class="ob-icon">⭐</div>
         <div class="ob-title">6 - Rashifal</div>
-        <div class="ob-desc">Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase. Powered by AI.</div>
-      </div>
+        <div class="ob-desc">Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase.</div>
+      </button>
+
     </div>
     <div class="ob-tip">Start with <strong>Family Setup</strong>, tap <strong>Live detect</strong> for location, then go to <strong>Dashboard</strong> for your AI daily tip. Everything runs in your browser - zero login, zero data shared.</div>
   </div>
 
-  <!-- Quick start CTA -->
   <div style="text-align:center;margin-top:.5rem">
     <button class="btn btn-g" onclick="showTab('family')" style="margin-right:.5rem">Get Started - Family Setup</button>
     <button class="btn" onclick="showTab('dash')" style="background:var(--cream);color:var(--earth);border:1px solid var(--border)">Go to Dashboard</button>
