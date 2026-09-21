@@ -256,8 +256,8 @@ input:focus,select:focus{border-color:var(--saffron)}
 .pwa-ios-hint{display:none;width:100%;font-size:.72rem;opacity:.88;margin-top:.3rem;padding-top:.3rem;border-top:1px solid rgba(255,255,255,.2)}
 .pwa-ios-hint.show{display:block}
 
-.ob-step{cursor:pointer;background:white;border-radius:10px;padding:.65rem;border:1px solid var(--border);transition:box-shadow .12s}
-.ob-step:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.ob-step{cursor:pointer;background:white;border-radius:10px;padding:.65rem;border:1px solid var(--border);transition:box-shadow .12s;text-align:left;width:100%;font-family:inherit;display:block}
+.ob-step:hover,.ob-step:focus{box-shadow:0 2px 8px rgba(0,0,0,.1);outline:none}
 .ob-icon{font-size:1.3rem;margin-bottom:.2rem}
 .ob-title{font-weight:600;font-size:.78rem;color:var(--earth);margin-bottom:.12rem}
 .ob-desc{font-size:.69rem;color:var(--muted);line-height:1.5}
@@ -370,33 +370,33 @@ input:focus,select:focus{border-color:var(--saffron)}
   <div class="card" style="border:1.5px solid var(--autumn-b);margin-bottom:1rem">
     <div class="ct" style="margin-bottom:.85rem">🗺 How to use Arogya Kutumb</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-bottom:.9rem">
-      <div onclick="showTab('family')" class="ob-step">
-        <div class="ob-icon">👨‍👩‍👧</div>
+      <button onclick="showTab('family')" class="ob-step">
+        <div class="ob-icon">👨‍👩‍👧</button>
         <div class="ob-title">1 - Family Setup</div>
         <div class="ob-desc">Add each member's name, age, weight and Prakriti (body type). The app personalises everything around them.</div>
       </div>
-      <div onclick="showTab('family')" class="ob-step">
-        <div class="ob-icon">📍</div>
+      <button onclick="showTab('family')" class="ob-step">
+        <div class="ob-icon">📍</button>
         <div class="ob-title">2 - Set Location</div>
         <div class="ob-desc">Tap Live detect to get your city and live AQI. Used for season-specific and air quality nutrition tips.</div>
       </div>
-      <div onclick="showTab('roti')" class="ob-step">
-        <div class="ob-icon">🫓</div>
+      <button onclick="showTab('roti')" class="ob-step">
+        <div class="ob-icon">🫓</button>
         <div class="ob-title">3 - Roti Calculator</div>
         <div class="ob-desc">Your family's seasonal roti recipe: flour ratios, ghee, spices, calculated for your Prakriti.</div>
       </div>
-      <div onclick="showTab('tracker')" class="ob-step">
-        <div class="ob-icon">✅</div>
+      <button onclick="showTab('tracker')" class="ob-step">
+        <div class="ob-icon">✅</button>
         <div class="ob-title">4 - Daily Tracker</div>
         <div class="ob-desc">Check off daily Ayurvedic habits: water, walk, sleep, supplements. Builds a streak to keep you consistent.</div>
       </div>
-      <div onclick="showTab('seasons')" class="ob-step">
-        <div class="ob-icon">🌿</div>
+      <button onclick="showTab('seasons')" class="ob-step">
+        <div class="ob-icon">🌿</button>
         <div class="ob-title">5 - Seasonal Guide</div>
         <div class="ob-desc">Ritu-specific dos and don'ts: foods, timing, Ayurvedic herbs for your current season.</div>
       </div>
-      <div onclick="showTab('rashifal')" class="ob-step">
-        <div class="ob-icon">⭐</div>
+      <button onclick="showTab('rashifal')" class="ob-step">
+        <div class="ob-icon">⭐</button>
         <div class="ob-title">6 - Rashifal</div>
         <div class="ob-desc">Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase. Powered by AI.</div>
       </div>
@@ -976,8 +976,10 @@ window.onload = ()=>{
   // Tab: Guide on first visit, last used tab on return
   {
     const lastTab = localStorage.getItem('ak_last_tab');
-    const startTab = lastTab || 'guide';
-    // Remove all act classes set in HTML, then apply correct one
+    // Validate the stored tab exists; fall back to 'guide' if not
+    const validTabs = ['guide','dash','family','roti','seasons','tracker','mantra','rashifal','share'];
+    const startTab = (lastTab && validTabs.includes(lastTab)) ? lastTab : 'guide';
+    if(startTab !== lastTab) localStorage.setItem('ak_last_tab', startTab); // correct stale value
     document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
     document.querySelectorAll('.nb').forEach(b=>b.classList.remove('act'));
     const startSec = document.getElementById('sec-'+startTab);
