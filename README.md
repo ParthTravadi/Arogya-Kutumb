@@ -1,6 +1,9 @@
 # Arogya-Kutumb
 Holistic Family Health · Nutrition · Ayurveda
 
+Everything runs in your browser - zero login, zero data shared.
+
+
 🗺 How to use Arogya Kutumb
 
 👨‍👩‍👧
@@ -26,4 +29,4 @@ Ritu-specific dos and don'ts: foods, timing, Ayurvedic herbs for your current se
 ⭐
 6 - Rashifal
 Daily Vedic reading for your Rashi: health tip, auspicious time, Sanskrit phrase.
-Start with Family Setup, tap Live detect for location, then go to Dashboard for your AI daily tip. Everything runs in your browser - zero login, zero data shared.
+Start with Family Setup, tap Live detect for location, then go to Dashboard for your AI daily tip. 
