@@ -4,7 +4,7 @@ Holistic Family Health · Nutrition · Ayurveda
 Everything runs in your browser - zero login, zero data shared.
 
 
-🗺 How to use Arogya Kutumb
+🗺 How to use Arogya Kutumb :: 
 
 👨‍👩‍👧
 1 - Family Setup
